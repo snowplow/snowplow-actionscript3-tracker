@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" version="3">
+  <includeClasses>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Parameter"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Tracker"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.emitter.Emitter"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Constants"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.emitter.BufferOption"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.payload.IPayload"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
