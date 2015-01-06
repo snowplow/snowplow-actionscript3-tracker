@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2014 Snowplow Analytics Ltd. All rights reserved.
+* Copyright (c) 2015 Snowplow Analytics Ltd. All rights reserved.
 *
 * This program is licensed to you under the Apache License Version 2.0,
 * and you may not use this file except in compliance with the Apache License Version 2.0.
@@ -13,6 +13,9 @@
 
 package com.snowplowanalytics.snowplow.tracker.core
 {
+	import com.snowplowanalytics.snowplow.tracker.core.emitter.Emitter;
+	import com.snowplowanalytics.snowplow.tracker.core.subject.Subject;
+
 	public class Tracker
 	{
 		/**
@@ -22,8 +25,7 @@ package com.snowplowanalytics.snowplow.tracker.core
 		 * @param appId Application ID
 		 * @param base64Encoded Whether JSONs in the payload should be base-64 encoded
 		 */
-		public Tracker(Emitter emitter, Subject subject, String namespace, String appId,
-			boolean base64Encoded) {
+		public Tracker(emitter:Emitter, subject:Subject, namespace:String, appId:String, base64Encoded:Boolean) {
 				this.emitter = emitter;
 				this.appId = appId;
 				this.base64Encoded = base64Encoded;

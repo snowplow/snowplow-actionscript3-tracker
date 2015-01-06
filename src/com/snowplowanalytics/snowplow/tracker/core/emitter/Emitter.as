@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2014 Snowplow Analytics Ltd. All rights reserved.
+* Copyright (c) 2015 Snowplow Analytics Ltd. All rights reserved.
 *
 * This program is licensed to you under the Apache License Version 2.0,
 * and you may not use this file except in compliance with the Apache License Version 2.0.
@@ -28,23 +28,26 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 		private var _buffer:Array = [];
 		
 		protected var bufferSize:int = BufferOption.DEFAULT;
-		protected var requestCallback:Function;
+		protected var successCallback:Function;
+		protected var errorCallback:Function;
 		protected var httpMethod:String = URLRequestMethod.GET;
 		
 		/**
 		 * Create an Emitter instance with a collector URL and HttpMethod to send requests.
 		 * @param URI The collector URL. Don't include "http://" - this is done automatically.
 		 * @param httpMethod The HTTP request method. If GET, <code>BufferOption</code> is set to <code>Instant</code>.
-		 * @param callback The callback function to handle success/failure cases when sending events.
+		 * @param successCallback The callback function to handle success cases when sending events.
+		 * @param errorCallback The callback function to handle error cases when sending events.
 		 */
-		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, callback:Function = null) {
+		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, successCallback:Function = null, errorCallback:Function = null) {
 			if (httpMethod == URLRequestMethod.GET) {
 				_uri = new URI("http://" + uri + "/i");
 			} else { // POST
 				_uri = new URI("http://" + uri + "/" + Constants.PROTOCOL_VENDOR + "/" + Constants.PROTOCOL_VERSION);
 			}
 			
-			this.requestCallback = callback;
+			this.successCallback = successCallback;
+			this.errorCallback = errorCallback;
 			this.httpMethod = httpMethod;
 			this._loader = new URLLoader();
 			
@@ -85,7 +88,7 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 				var success_count:int = 0;
 				var unsentPayloads:Array = [];
 				
-				for (var payload:IPayload in _buffer) {
+				for each (var payload:IPayload in _buffer) {
 					var status_code:int = sendGetData(payload).getStatusLine().getStatusCode();
 					if (status_code == 200)
 						success_count++;
@@ -94,26 +97,26 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 				}
 				
 				if (unsentPayloads.size() == 0) {
-					if (requestCallback != null)
-						requestCallback.onSuccess(success_count);
+					if (successCallback != null)
+						successCallback(success_count);
 				}
-				else if (requestCallback != null)
-					requestCallback.onFailure(success_count, unsentPayloads);
+				else if (errorCallback != null)
+					errorCallback(success_count, unsentPayloads);
 				
-			} else if (httpMethod == HttpMethod.POST) {
-				LinkedList<Payload> unsentPayload = new LinkedList<Payload>();
+			} else if (httpMethod == URLRequestMethod.POST) {
+				var unsentPayload:Array = [];
 				
-				SchemaPayload postPayload = new SchemaPayload();
+				var postPayload:SchemaPayload = new SchemaPayload();
 				postPayload.setSchema(Constants.SCHEMA_PAYLOAD_DATA);
 				
-				ArrayList<Map> eventMaps = new ArrayList<Map>();
-				for (Payload payload : buffer) {
-					eventMaps.add(payload.getMap());
+				var eventMaps:Array = [];
+				for (var payload:IPayload in buffer) {
+					eventMaps.push(payload.getMap());
 				}
 
 				postPayload.setData(eventMaps);
 				
-				int status_code = sendPostData(postPayload).getStatusLine().getStatusCode();
+				var status_code:int = sendPostData(postPayload).getStatusLine().getStatusCode();
 				if (status_code == 200 && requestCallback != null)
 					requestCallback.onSuccess(buffer.size());
 				else if (requestCallback != null){
