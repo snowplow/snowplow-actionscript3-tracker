@@ -13,15 +13,19 @@
 
 package com.snowplowanalytics.snowplow.tracker.core.payload
 {
+	import com.snowplowanalytics.snowplow.tracker.core.Parameter;
+	import com.snowplowanalytics.snowplow.tracker.core.Util;
+	import com.snowplowanalytics.snowplow.tracker.core.util.Preconditions;
+
 	public class SchemaPayload implements IPayload
 	{
-		private var objectMapper:ObjectMapper = Util.defaultMapper();
-		private var logger:Logger = LoggerFactory.getLogger(SchemaPayload.class);
-		private var objectNode:ObjectNode = objectMapper.createObjectNode();
+		//private var objectMapper:ObjectMapper = Util.defaultMapper();
+		//private var logger:Logger = LoggerFactory.getLogger(SchemaPayload.class);
+		private var objectNode:Object = {};
 		
 		public function SchemaPayload(payload:IPayload = null)
 		{
-			if (payload != null) {
+/*			if (payload != null) {
 				var data:ObjectNode;
 				
 				if (payload.getClass() == TrackerPayload.class) {
@@ -34,6 +38,15 @@ package com.snowplowanalytics.snowplow.tracker.core.payload
 				}
 					objectNode.set(Parameter.DATA, data);
 			}
+*/		}
+		
+		public function setSchema(schema:String):SchemaPayload {
+			Preconditions.checkNotNull(schema, "schema cannot be null");
+			Preconditions.checkArgument(!Util.isNullOrEmpty(schema), "schema cannot be empty.");
+			
+			trace("Setting schema: {}", schema);
+			objectNode[Parameter.SCHEMA] = schema;
+			return this;
 		}
 		
 		public function add(key:String, value:*):void

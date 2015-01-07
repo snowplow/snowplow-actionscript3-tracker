@@ -18,6 +18,14 @@ package com.snowplowanalytics.snowplow.tracker.core
 
 	public class Tracker
 	{
+		private var base64Encoded:Boolean = true;
+		private var emitter:Emitter;
+		private var platform:String;
+		private var appId:String;
+		private var namespace:String;
+		private var trackerVersion:String;
+		private var subject:Subject;
+		
 		/**
 		 * @param emitter Emitter to which events will be sent
 		 * @param subject Subject to be tracked
@@ -25,14 +33,14 @@ package com.snowplowanalytics.snowplow.tracker.core
 		 * @param appId Application ID
 		 * @param base64Encoded Whether JSONs in the payload should be base-64 encoded
 		 */
-		public Tracker(emitter:Emitter, subject:Subject, namespace:String, appId:String, base64Encoded:Boolean) {
+		function Tracker(emitter:Emitter, subject:Subject, namespace:String, appId:String, base64Encoded:Boolean = true) {
 				this.emitter = emitter;
 				this.appId = appId;
 				this.base64Encoded = base64Encoded;
 				this.namespace = namespace;
 				this.subject = subject;
 				this.trackerVersion = Version.TRACKER;
-				this.platform = DevicePlatform.Desktop;
+				this.platform = DevicePlatform.DESKTOP;
 			}
 	}
 }

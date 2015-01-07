@@ -17,8 +17,8 @@ package com.snowplowanalytics.snowplow.tracker.core.payload
 
 	public class TrackerPayload implements IPayload
 	{
-		private var objectMapper:ObjectMapper = Util.defaultMapper();
-		private var logger:Logger = LoggerFactory.getLogger(SchemaPayload.class);
+		//private var objectMapper:ObjectMapper = Util.defaultMapper();
+		//private var logger:Logger = LoggerFactory.getLogger(SchemaPayload.class);
 		private var objectNode:Object = {};
 
 		public function TrackerPayload()
@@ -27,18 +27,19 @@ package com.snowplowanalytics.snowplow.tracker.core.payload
 		
 		public function add(key:String, value:*):void
 		{
-			if (Util.isNullOrEmpty(value)) {
+/*			if (Util.isNullOrEmpty(value)) {
 				trace("kv-value is empty. Returning out without adding key..");
 				return;
 			}
 			
 			trace("Adding new key: {} with value: {}", key, value);
 			objectNode[key] = value;
+*/			
 		}
 		
 		public function addMap(map:Object):void
 		{
-			if (map == null) {
+/*			if (map == null) {
 				logger.debug("Map passed in is null. Returning without adding map..");
 				return;
 			}
@@ -46,7 +47,7 @@ package com.snowplowanalytics.snowplow.tracker.core.payload
 			for(var key:String in map) {
 				add(key, map[key]);
 			}
-		}
+*/		}
 		
 		public function getMap():Object
 		{

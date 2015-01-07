@@ -16,6 +16,7 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 	import com.adobe.net.URI;
 	import com.snowplowanalytics.snowplow.tracker.core.Constants;
 	import com.snowplowanalytics.snowplow.tracker.core.payload.IPayload;
+	import com.snowplowanalytics.snowplow.tracker.core.payload.SchemaPayload;
 	
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
