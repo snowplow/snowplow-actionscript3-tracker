@@ -11,11 +11,8 @@
 * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
 */
 
-package com.snowplowanalytics.snowplow.tracker.core.subject
+package com.snowplowanalytics.snowplow.tracker.core
 {
-	import com.snowplowanalytics.snowplow.tracker.core.Parameter;
-	import com.snowplowanalytics.snowplow.tracker.core.Util;
-
 	public class Subject {
 		
 		private var standardPairs:Object;

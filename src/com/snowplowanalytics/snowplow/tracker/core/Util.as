@@ -13,6 +13,8 @@
 
 package com.snowplowanalytics.snowplow.tracker.core
 {
+	import com.snowplowanalytics.snowplow.tracker.core.util.UUID;
+	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
@@ -131,5 +133,34 @@ package com.snowplowanalytics.snowplow.tracker.core
 			
 			loader.load(request); 
 		}
+		
+		public static function getEventId():String 
+		{
+			return UUID.generateGuid();
+		}
+		
+		public static function getTimestamp():String {
+			var date:Date = new Date();
+			return date.time.toString();
+		}
+		
+		public static function copyObject (object:Object, returnEmptyObjectIfNull:Boolean = false):Object  
+		{ 
+			if (object == null)
+			{
+				if (returnEmptyObjectIfNull)
+					return {}
+				else
+					return null;
+			}
+			
+			var newObject:Object = {};
+			
+			for (var key:String in object) {
+				newObject[key] = object[key];
+			}
+
+			return newObject;
+		} 
 	}
 }

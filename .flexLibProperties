@@ -7,13 +7,15 @@
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Constants"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.emitter.BufferOption"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.payload.IPayload"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.subject.Subject"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Subject"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Util"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.payload.SchemaPayload"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.payload.TrackerPayload"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.util.Preconditions"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.DevicePlatform"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Version"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.util.UUID"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.TransactionItem"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
