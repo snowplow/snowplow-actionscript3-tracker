@@ -49,6 +49,14 @@ package com.snowplowanalytics.snowplow.tracker.core.payload
 			return this;
 		}
 		
+		public function setData(data:*):SchemaPayload {
+			if (data is IPayload) {
+				data = data.getMap();
+			}
+			objectNode[Parameter.DATA] = data;
+			return this;
+		}
+		
 		public function add(key:String, value:*):void
 		{
 		}

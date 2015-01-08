@@ -13,6 +13,15 @@
 
 package com.snowplowanalytics.snowplow.tracker.core
 {
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.utils.ByteArray;
+
 	public class Util
 	{
 		public static function isNullOrEmpty(str:*):Boolean
@@ -32,6 +41,95 @@ package com.snowplowanalytics.snowplow.tracker.core
 				}
 			}
 			return str;
+		}
+		
+		private static function callCallback (dataFormat:String, loader:URLLoader, callback:Function):void
+		{
+			var result:*;
+			
+			switch (dataFormat)
+			{
+				case URLLoaderDataFormat.TEXT:
+				case URLLoaderDataFormat.VARIABLES:
+					result = loader.data;
+					break;
+				case URLLoaderDataFormat.BINARY:
+				default:
+					result = ByteArray(loader.data);
+					break;
+			}
+			
+			callback(result);
+		}
+		
+		public static function getResponse	(
+				url:String, 
+				callback:Function, 
+				errorCallback:Function, 
+				method:String = URLRequestMethod.GET, 
+				postData:String = null, 
+				dataFormat:String = URLLoaderDataFormat.TEXT
+			):void
+		{
+			var loader:URLLoader = new URLLoader();
+			var request:URLRequest = new URLRequest(url);
+			request.method = method;
+			
+			if (postData != null && method == URLRequestMethod.POST)
+			{
+				request.data = postData;
+				request.contentType = "application/json; charset=utf-8";
+			}
+			
+			loader.dataFormat = dataFormat;
+			
+			loader.addEventListener
+				(
+					Event.COMPLETE, 
+					function (event:Event):void
+					{
+						if (callback != null)
+						{
+							callCallback(dataFormat, loader, callback);
+						}
+					}
+				);
+			
+			loader.addEventListener
+				(
+					IOErrorEvent.IO_ERROR, 
+					function (event:IOErrorEvent):void
+					{
+						if (event.type == "201")
+						{
+							if (callback != null)
+							{
+								callCallback(dataFormat, loader, callback);
+							}
+						}
+						else
+						{
+							if (errorCallback != null)
+							{
+								errorCallback(event);
+							}
+						}
+					}
+				);
+			
+			loader.addEventListener
+				(
+					SecurityErrorEvent.SECURITY_ERROR, 
+					function (event:SecurityErrorEvent):void
+					{
+						if (errorCallback != null)
+						{
+							errorCallback(event);
+						}
+					}
+				);
+			
+			loader.load(request); 
 		}
 	}
 }

@@ -15,6 +15,7 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 {
 	import com.adobe.net.URI;
 	import com.snowplowanalytics.snowplow.tracker.core.Constants;
+	import com.snowplowanalytics.snowplow.tracker.core.Util;
 	import com.snowplowanalytics.snowplow.tracker.core.payload.IPayload;
 	import com.snowplowanalytics.snowplow.tracker.core.payload.SchemaPayload;
 	
@@ -25,7 +26,6 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 	public class Emitter
 	{
 		private var _uri:URI;
-		private var _loader:URLLoader;
 		private var _buffer:Array = [];
 		
 		protected var bufferSize:int = BufferOption.DEFAULT;
@@ -50,7 +50,6 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 			this.successCallback = successCallback;
 			this.errorCallback = errorCallback;
 			this.httpMethod = httpMethod;
-			this._loader = new URLLoader();
 			
 			if (httpMethod == URLRequestMethod.GET) {
 				this.setBufferSize(BufferOption.INSTANT);
@@ -75,6 +74,22 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 			if (_buffer.length == bufferSize)
 				flushBuffer();
 		}
+
+		/**
+		 * Sends all events in the buffer to the collector.
+		 */
+		public function checkBufferComplete(successCount:int, totalCount:int, totalPayloads:int, unsentPayloads:Array):void {
+			if (totalCount == totalPayloads) 
+			{
+				if (unsentPayloads.size() == 0) 
+				{
+					if (successCallback != null)
+						successCallback(successCount);
+				} 
+				else if (errorCallback != null)
+					errorCallback(successCount, unsentPayloads);
+			}
+		}
 		
 		/**
 		 * Sends all events in the buffer to the collector.
@@ -86,24 +101,25 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 			}
 			
 			if (httpMethod == URLRequestMethod.GET) {
-				var success_count:int = 0;
+				var successCount:int = 0;
+				var totalCount:int = 0;
+				var totalPayloads:int = _buffer.length;
 				var unsentPayloads:Array = [];
 				
-				for each (var payload:IPayload in _buffer) {
-					var status_code:int = sendGetData(payload).getStatusLine().getStatusCode();
-					if (status_code == 200)
-						success_count++;
-					else
-						unsentPayloads.add(payload);
+				for each (var getPayload:IPayload in _buffer) {
+					sendGetData(getPayload,
+						function onGetSuccess (data:*):void {
+							successCount++;
+							totalCount++;
+							checkBufferComplete(successCount, totalCount, totalPayloads, unsentPayloads);
+						},
+						function onGetError ():void {
+							totalCount++;
+							unsentPayloads.add(payload);
+							checkBufferComplete(successCount, totalCount, totalPayloads, unsentPayloads);
+						}
+					);
 				}
-				
-				if (unsentPayloads.size() == 0) {
-					if (successCallback != null)
-						successCallback(success_count);
-				}
-				else if (errorCallback != null)
-					errorCallback(success_count, unsentPayloads);
-				
 			} else if (httpMethod == URLRequestMethod.POST) {
 				var unsentPayload:Array = [];
 				
@@ -111,31 +127,52 @@ package com.snowplowanalytics.snowplow.tracker.core.emitter
 				postPayload.setSchema(Constants.SCHEMA_PAYLOAD_DATA);
 				
 				var eventMaps:Array = [];
-				for (var payload:IPayload in buffer) {
-					eventMaps.push(payload.getMap());
+				for each (var payload:IPayload in _buffer) {
+					eventMaps.push(postPayload.getMap());
 				}
 
 				postPayload.setData(eventMaps);
 				
-				var status_code:int = sendPostData(postPayload).getStatusLine().getStatusCode();
-				if (status_code == 200 && requestCallback != null)
-					requestCallback.onSuccess(buffer.size());
-				else if (requestCallback != null){
-					unsentPayload.add(postPayload);
-					requestCallback.onFailure(0, unsentPayload);
-				}
+				sendPostData(postPayload,
+					function onPostSuccess (data:*):void 
+					{
+						if (successCallback != null) 
+						{
+							successCallback(_buffer.size());
+						}
+					},
+					function onPostError ():void 
+					{
+						if (errorCallback != null) 
+						{
+							unsentPayload.add(postPayload);
+							errorCallback(0, unsentPayloads);
+						}
+					}
+				);
 			}
 			
 			// Empties current buffer
-			buffer.clear();
+			_buffer.clear();
 		}
 		
-		protected function sendPostData(payload:IPayload):* {
-		
+		protected function sendPostData(payload:IPayload, successCallback:Function, errorCallback:Function):void
+		{
+			Util.getResponse(_uri.toString(), 
+				successCallback,
+				errorCallback, 
+				URLRequestMethod.POST,
+				payload.toString());
 		}
 		
-		protected function sendGetData(payload:IPayload):* {
+		protected function sendGetData(payload:IPayload, successCallback:Function, errorCallback:Function):void 
+		{
+			var hashMap:Object = payload.getMap();
+			_uri.setQueryByMap(hashMap);
 			
-		}	
+			Util.getResponse(_uri.toString(), 
+				successCallback,
+				errorCallback);
+		}
 	}
 }
