@@ -1,4 +1,4 @@
-package test
+package 
 {
 	import com.snowplowanalytics.snowplow.tracker.*;
 	import com.snowplowanalytics.snowplow.tracker.emitter.*;
