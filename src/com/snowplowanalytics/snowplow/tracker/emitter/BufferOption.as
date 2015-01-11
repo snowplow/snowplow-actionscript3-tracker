@@ -11,12 +11,11 @@
 * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
 */
 
-package com.snowplowanalytics.snowplow.tracker.core
+package com.snowplowanalytics.snowplow.tracker.emitter
 {
-	// DO NOT EDIT. AUTO-GENERATED.
-	public class Version
+	public class BufferOption
 	{
-		public static const TRACKER:String = "as3-0.1.0";
-		public static const VERSION:String = "0.1.0";
+		public static const INSTANT:int = 1;
+		public static const DEFAULT:int = 10; // Tracker Protocol v2
 	}
 }

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
   <includeClasses>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Parameter"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Tracker"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.emitter.Emitter"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Constants"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.emitter.BufferOption"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.payload.IPayload"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Subject"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Util"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.payload.SchemaPayload"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.payload.TrackerPayload"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.util.Preconditions"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.DevicePlatform"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.Version"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.util.UUID"/>
-    <classEntry path="com.snowplowanalytics.snowplow.tracker.core.TransactionItem"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Parameter"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Tracker"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.emitter.Emitter"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Constants"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.emitter.BufferOption"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.payload.IPayload"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Subject"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Util"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.util.Preconditions"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.DevicePlatform"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Version"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.util.UUID"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.TransactionItem"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

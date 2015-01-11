@@ -1,4 +1,4 @@
-package com.snowplowanalytics.snowplow.tracker.core
+package com.snowplowanalytics.snowplow.tracker
 {
 	public dynamic class TransactionItem
 	{

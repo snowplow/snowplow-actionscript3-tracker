@@ -11,13 +11,13 @@
 * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
 */
 
-package com.snowplowanalytics.snowplow.tracker.core.emitter
+package com.snowplowanalytics.snowplow.tracker.emitter
 {
 	import com.adobe.net.URI;
-	import com.snowplowanalytics.snowplow.tracker.core.Constants;
-	import com.snowplowanalytics.snowplow.tracker.core.Util;
-	import com.snowplowanalytics.snowplow.tracker.core.payload.IPayload;
-	import com.snowplowanalytics.snowplow.tracker.core.payload.SchemaPayload;
+	import com.snowplowanalytics.snowplow.tracker.Constants;
+	import com.snowplowanalytics.snowplow.tracker.Util;
+	import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
+	import com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload;
 	
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;

@@ -11,11 +11,11 @@
 * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
 */
 
-package com.snowplowanalytics.snowplow.tracker.core.payload
+package com.snowplowanalytics.snowplow.tracker.payload
 {
-	import com.snowplowanalytics.snowplow.tracker.core.Parameter;
-	import com.snowplowanalytics.snowplow.tracker.core.Util;
-	import com.snowplowanalytics.snowplow.tracker.core.util.Preconditions;
+	import com.snowplowanalytics.snowplow.tracker.Parameter;
+	import com.snowplowanalytics.snowplow.tracker.Util;
+	import com.snowplowanalytics.snowplow.tracker.util.Preconditions;
 
 	public class SchemaPayload implements IPayload
 	{

@@ -11,9 +11,9 @@
 * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
 */
 
-package com.snowplowanalytics.snowplow.tracker.core
+package com.snowplowanalytics.snowplow.tracker
 {
-	import com.snowplowanalytics.snowplow.tracker.core.util.UUID;
+	import com.snowplowanalytics.snowplow.tracker.util.UUID;
 	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
