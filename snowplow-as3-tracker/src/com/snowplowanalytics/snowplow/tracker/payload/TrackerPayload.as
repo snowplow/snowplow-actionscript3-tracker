@@ -13,6 +13,7 @@
 
 package com.snowplowanalytics.snowplow.tracker.payload
 {
+	import com.adobe.serialization.json.JSON;
 	import com.snowplowanalytics.snowplow.tracker.Util;
 
 	public class TrackerPayload implements IPayload
@@ -27,41 +28,58 @@ package com.snowplowanalytics.snowplow.tracker.payload
 		
 		public function add(key:String, value:*):void
 		{
-/*			if (Util.isNullOrEmpty(value)) {
+			if (Util.isNullOrEmpty(value)) {
 				trace("kv-value is empty. Returning out without adding key..");
 				return;
 			}
 			
 			trace("Adding new key: {} with value: {}", key, value);
 			objectNode[key] = value;
-*/			
 		}
 		
 		public function addMap(map:Object, base64_encoded:Boolean = false, type_encoded:String = null, type_no_encoded:String = null):void
 		{
-/*			if (map == null) {
-				logger.debug("Map passed in is null. Returning without adding map..");
-				return;
+			if (Util.isNullOrEmpty(type_encoded) && Util.isNullOrEmpty(type_no_encoded)){
+				// Return if we don't have a map
+				if (map == null) {
+					trace("Map passed in is null. Returning without adding map..");
+					return;
+				}
+
+				for(var key:String in map) {
+					add(key, map[key]);
+				}
+			} else {
+				// Return if we don't have a map
+				if (map == null) {
+					trace("Map passed in is null. Returning nothing..");
+					return;
+				}
+				
+				var mapString:String;
+				try {
+					mapString = JSON.encode(map);
+				} catch (e:Error) {
+					trace(e.getStackTrace());
+					return; // Return because we can't continue
+				}
+				
+				if (base64_encoded) { // base64 encoded data
+					objectNode[type_encoded] = Util.base64Encode(mapString);
+				} else { // add it as a child node
+					add(type_no_encoded, mapString);
+				}
 			}
-			
-			for(var key:String in map) {
-				add(key, map[key]);
-			}
-*/		}
+		}
 		
 		public function getMap():Object
 		{
 			return objectNode;
 		}
-		
-		public function getNode():*
-		{
-			return objectNode;
-		}
-		
+			
 		public function toString():String
 		{
-			return objectNode.toString();
+			return JSON.encode(objectNode);
 		}
 	}
 }

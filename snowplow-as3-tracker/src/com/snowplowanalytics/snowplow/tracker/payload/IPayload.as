@@ -41,12 +41,6 @@ package com.snowplowanalytics.snowplow.tracker.payload
 		function getMap():Object;
 		
 		/**
-		 * Returns the Payload using Jackson JSON to return a JsonNode.
-		 * @return A JsonNode
-		 */
-		function getNode():*;
-		
-		/**
 		 * Returns the Payload as a string. This is essentially the toString from the ObjectNode used
 		 * to store the Payload.
 		 * @return A string value of the Payload.

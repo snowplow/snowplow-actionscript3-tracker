@@ -13,6 +13,7 @@
 
 package com.snowplowanalytics.snowplow.tracker.payload
 {
+	import com.adobe.serialization.json.JSON;
 	import com.snowplowanalytics.snowplow.tracker.Parameter;
 	import com.snowplowanalytics.snowplow.tracker.Util;
 	import com.snowplowanalytics.snowplow.tracker.util.Preconditions;
@@ -25,20 +26,11 @@ package com.snowplowanalytics.snowplow.tracker.payload
 		
 		public function SchemaPayload(payload:IPayload = null)
 		{
-/*			if (payload != null) {
-				var data:ObjectNode;
-				
-				if (payload.getClass() == TrackerPayload.class) {
-					logger.debug("Payload class is a TrackerPayload instance.");
-					logger.debug("Trying getNode()");
-					data = (ObjectNode) payload.getNode();
-				} else {
-					logger.debug("Converting Payload map to ObjectNode.");
-					data = objectMapper.valueToTree(payload.getMap());
-				}
-					objectNode.set(Parameter.DATA, data);
+			if (payload != null) 
+			{
+				objectNode[Parameter.DATA] = payload.getMap();
 			}
-*/		}
+		}
 		
 		public function setSchema(schema:String):SchemaPayload {
 			Preconditions.checkNotNull(schema, "schema cannot be null");
@@ -59,25 +51,30 @@ package com.snowplowanalytics.snowplow.tracker.payload
 		
 		public function add(key:String, value:*):void
 		{
+			/*
+			* We intentionally do nothing because we do not want our SchemaPayload
+			* to do anything except accept a 'data' and 'schema'
+			*/
+			trace("add(String, String) method called: Doing nothing.");
 		}
 		
 		public function addMap(map:Object, base64_encoded:Boolean = false, type_encoded:String = null, type_no_encoded:String = null):void
 		{
+			/*
+			* We intentionally do nothing because we do not want our SchemaPayload
+			* to do anything except accept a 'data' and 'schema'
+			*/
+			trace("addMap(Map, Boolean, String, String) method called: Doing nothing.");
 		}
 		
 		public function getMap():Object
 		{
-			return null;
+			return objectNode;
 		}
-		
-		public function getNode():*
-		{
-			return null;
-		}
-		
+	
 		public function toString():String
 		{
-			return null;
+			return JSON.encode(objectNode);
 		}
 	}
 }

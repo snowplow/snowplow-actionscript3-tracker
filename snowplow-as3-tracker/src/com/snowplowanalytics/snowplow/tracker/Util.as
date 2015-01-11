@@ -24,6 +24,8 @@ package com.snowplowanalytics.snowplow.tracker
 	import flash.net.URLRequestMethod;
 	import flash.utils.ByteArray;
 
+	import mx.utils.Base64Encoder;
+
 	public class Util
 	{
 		public static function isNullOrEmpty(str:*):Boolean
@@ -161,6 +163,22 @@ package com.snowplowanalytics.snowplow.tracker
 			}
 
 			return newObject;
+		}
+		
+		/* Addition functions
+		*  Used to add different sources of key=>value pairs to a map.
+		*  Map is then used to build "Associative array for getter function.
+		*  Some use Base64 encoding
+		*/
+		public static function base64Encode(str:String):String {
+			try {
+				var encoder:Base64Encoder = new Base64Encoder();
+				encoder.encode(str);
+				return encoder.flush();
+			} catch (e:Error) {
+				trace(e.getStackTrace());
+			}
+			return null;
 		}
 		
 		public static function getTransactionId():int 

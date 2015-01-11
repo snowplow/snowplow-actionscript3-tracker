@@ -23,10 +23,12 @@ package
 			var map:Object = {};
 			map["foo"] = "bar";
 			map["more foo"] = "more bar";
-			payload["map"] = map;
+			payload.add("map", map);
 			
-			var res:String = "{\"map\":{\"more foo\":\"more bar\",\"foo\":\"bar\"}}";
-			Assert.assertEquals(res, payload.toString());
+			var res1:String = "{\"map\":{\"foo\":\"bar\",\"more foo\":\"more bar\"}}";
+			var res2:String = "{\"map\":{\"more foo\":\"more bar\",\"foo\":\"bar\"}}";
+			var payloadString:String = payload.toString();
+			Assert.assertTrue(payloadString == res1 || payloadString == res2);
 		}
 		
 		[Test]
@@ -86,7 +88,7 @@ package
 			foo["mehh"] = bar;
 			var myarray:Array = ["arrayItem","arrayItem2"];
 			payload = new TrackerPayload();
-			payload["myarray"] = myarray;
+			payload.add("myarray", myarray);
 			
 			res = "{\"myarray\":[\"arrayItem\",\"arrayItem2\"]}";
 			Assert.assertEquals(res, payload.toString());
@@ -127,7 +129,7 @@ package
 			payload = new SchemaPayload();
 			payload.setData(foo);
 			
-			Assert.assertEquals(data, payload.getMap());
+			Assert.assertTrue(Helpers.compareObjects(data, payload.getMap()));
 		}
 	}
 }
