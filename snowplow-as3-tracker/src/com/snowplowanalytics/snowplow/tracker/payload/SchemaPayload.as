@@ -61,7 +61,7 @@ package com.snowplowanalytics.snowplow.tracker.payload
 		{
 		}
 		
-		public function addMap(map:Object):void
+		public function addMap(map:Object, base64_encoded:Boolean = false, type_encoded:String = null, type_no_encoded:String = null):void
 		{
 		}
 		

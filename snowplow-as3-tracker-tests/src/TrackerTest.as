@@ -38,7 +38,7 @@ package
 			var s2:Subject = new Subject();
 			s2.setColorDepth(24);
 			tracker.setSubject(s2);
-			var subjectPairs:Object = new Object();
+			var subjectPairs:Object = {};
 			subjectPairs["tz"] = "Etc/UTC";
 			subjectPairs["cd"] = "24";
 			Assert.assertEquals(subjectPairs, tracker.getSubject().getSubject());
@@ -73,7 +73,7 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
-			var someContext:Object = new Object();
+			var someContext:Object = {};
 			someContext["someContextKey"] = "testTrackPageView3";
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
 			context.setData(someContext);
@@ -137,7 +137,7 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
-			var someContext:Object = new Object();
+			var someContext:Object = {};
 			someContext["someContextKey"] = "testTrackPageView2";
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
 			context.setData(someContext);
@@ -179,7 +179,7 @@ package
 			//emitter.setBufferOption(BufferOption.Instant);
 			
 			var context:SchemaPayload = new SchemaPayload();
-			var someContext:Object = new Object();
+			var someContext:Object = {};
 			someContext["someContextKey"] = "testTrackPageView2";
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
 			context.setData(someContext);

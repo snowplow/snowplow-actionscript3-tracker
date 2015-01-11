@@ -161,6 +161,11 @@ package com.snowplowanalytics.snowplow.tracker
 			}
 
 			return newObject;
-		} 
+		}
+		
+		public static function getTransactionId():int 
+		{ 
+			return Math.round(Math.random() * 1000000);
+	    }
 	}
 }

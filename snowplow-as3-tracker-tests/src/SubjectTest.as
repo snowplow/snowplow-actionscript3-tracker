@@ -8,7 +8,7 @@ package
 	{
 		[Test]
 		public function testSetUserId():void {
-			subject:Subject = new Subject();
+			var subject:Subject = new Subject();
 			subject.setUserId("user1");
 			Assert.assertEquals("user1", subject.getSubject().get("uid"));
 		}

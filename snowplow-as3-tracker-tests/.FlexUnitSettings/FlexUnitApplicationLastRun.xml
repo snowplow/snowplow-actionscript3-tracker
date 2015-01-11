@@ -2,5 +2,9 @@
 <testrun name="" >
 <testsuite  name="Default Test Suite" project="snowplow-as3-tracker-tests">
 <testsuite name="TrackerTest" type="testsuiteclass"/>
+<testsuite name="SubjectTest" type="testsuiteclass"/>
+<testsuite name="TrackerPayloadTest" type="testsuiteclass"/>
+<testsuite name="EmitterTest" type="testsuiteclass"/>
+<testsuite name="UtilTest" type="testsuiteclass"/>
 </testsuite>
 </testrun>

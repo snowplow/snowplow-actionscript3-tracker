@@ -75,7 +75,7 @@ package
 		}
 		
 		[Test]
-		public function testSetData() {
+		public function testSetData():void {
 			var payload:IPayload;
 			var res:String;
 			var foo:Object = {};

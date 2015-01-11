@@ -25,11 +25,14 @@ package com.snowplowanalytics.snowplow.tracker.payload
 		function add(key:String, value:*):void;
 		
 		/**
-		 * Add all the mappings from the specified map. The effect is the equivalent to that of calling
-		 * add(String key, Object value) for each mapping for each key.
-		 * @param map Mappings to be stored in this map
+		 * Add a map to the Payload with a key dependent on the base 64 encoding option you choose using the
+		 * two keys provided.
+		 * @param map Mapping to be stored
+		 * @param base64_encoded The option you choose to encode the data
+		 * @param type_encoded The key that would be set if the encoding option was set to true
+		 * @param type_no_encoded They key that would be set if the encoding option was set to false
 		 */
-		function addMap(map:Object):void;
+		function addMap(map:Object, base64_encoded:Boolean = false, type_encoded:String = null, type_no_encoded:String = null):void;
 
 		/**
 		 * Returns the Payload as a HashMap.

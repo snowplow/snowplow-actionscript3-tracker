@@ -81,7 +81,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		public function checkBufferComplete(successCount:int, totalCount:int, totalPayloads:int, unsentPayloads:Array):void {
 			if (totalCount == totalPayloads) 
 			{
-				if (unsentPayloads.size() == 0) 
+				if (unsentPayloads.length == 0) 
 				{
 					if (successCallback != null)
 						successCallback(successCount);
@@ -138,7 +138,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 					{
 						if (successCallback != null) 
 						{
-							successCallback(_buffer.size());
+							successCallback(_buffer.length);
 						}
 					},
 					function onPostError ():void 
