@@ -68,9 +68,9 @@ package com.snowplowanalytics.snowplow.tracker
 				url:String, 
 				callback:Function, 
 				errorCallback:Function, 
-				method:String = URLRequestMethod.GET, 
+				method:String = "get", 
 				postData:String = null, 
-				dataFormat:String = URLLoaderDataFormat.TEXT
+				dataFormat:String = "text"
 			):void
 		{
 			var loader:URLLoader = new URLLoader();

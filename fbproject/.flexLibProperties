@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" version="3">
+  <includeClasses>
+    <classEntry path="com.adobe.net.IURIResolver"/>
+    <classEntry path="com.adobe.net.URI"/>
+    <classEntry path="com.adobe.net.URIEncodingBitmap"/>
+    <classEntry path="com.adobe.serialization.json.JSON"/>
+    <classEntry path="com.adobe.serialization.json.JSONDecoder"/>
+    <classEntry path="com.adobe.serialization.json.JSONEncoder"/>
+    <classEntry path="com.adobe.serialization.json.JSONParseError"/>
+    <classEntry path="com.adobe.serialization.json.JSONToken"/>
+    <classEntry path="com.adobe.serialization.json.JSONTokenType"/>
+    <classEntry path="com.adobe.serialization.json.JSONTokenizer"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Constants"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.DevicePlatform"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Parameter"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Subject"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Tracker"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.TransactionItem"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Util"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.Version"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.emitter.BufferOption"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.emitter.Emitter"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.payload.IPayload"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.util.Preconditions"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.util.UUID"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
