@@ -10,28 +10,28 @@ package
 		public function testSetUserId():void {
 			var subject:Subject = new Subject();
 			subject.setUserId("user1");
-			Assert.assertEquals("user1", subject.getSubject().get("uid"));
+			Assert.assertEquals("user1", subject.getSubject()["uid"]);
 		}
 		
 		[Test]
 		public function testSetScreenResolution():void {
 			var subject:Subject = new Subject();
 			subject.setScreenResolution(100, 150);
-			Assert.assertEquals("100x150", subject.getSubject().get("res"));
+			Assert.assertEquals("100x150", subject.getSubject()["res"]);
 		}
 		
 		[Test]
 		public function testSetViewPort():void {
 			var subject:Subject = new Subject();
 			subject.setViewPort(150, 100);
-			Assert.assertEquals("150x100", subject.getSubject().get("vp"));
+			Assert.assertEquals("150x100", subject.getSubject()["vp"]);
 		}
 		
 		[Test]
 		public function testSetColorDepth():void {
 			var subject:Subject = new Subject();
 			subject.setColorDepth(10);
-			Assert.assertEquals("10", subject.getSubject().get("cd"));
+			Assert.assertEquals("10", subject.getSubject()["cd"]);
 		}
 		
 		// Enable only if running locally, change assert to your local timezone
@@ -45,14 +45,14 @@ package
 		public function testSetTimezone2():void {
 			var subject:Subject = new Subject();
 			subject.setTimezone("America/Toronto");
-			Assert.assertEquals("America/Toronto", subject.getSubject().get("tz"));
+			Assert.assertEquals("America/Toronto", subject.getSubject()["tz"]);
 		}
 		
 		[Test]
 		public function testSetLanguage():void {
 			var subject:Subject = new Subject();
 			subject.setLanguage("EN");
-			Assert.assertEquals("EN", subject.getSubject().get("lang"));
+			Assert.assertEquals("EN", subject.getSubject()["lang"]);
 		}
 		
 		[Test]
@@ -65,7 +65,7 @@ package
 			expected["tz"] = "America/Toronto";
 			expected["uid"] = "user1";
 			
-			Assert.assertEquals(expected, subject.getSubject());
+			Assert.assertTrue(Helpers.compareObjects(expected, subject.getSubject()));
 		}
 	}
 }

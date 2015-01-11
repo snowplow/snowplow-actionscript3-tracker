@@ -42,8 +42,10 @@ package
 			var payload:IPayload = new TrackerPayload();
 			payload.addMap(foo);
 			
-			var res:String = "{\"myKey\":\"my Value\",\"mehh\":[\"somebar\",\"somebar2\"]}";
-			Assert.assertEquals(res, payload.toString());
+			var res1:String = "{\"myKey\":\"my Value\",\"mehh\":[\"somebar\",\"somebar2\"]}";
+			var res2:String = "{\"mehh\":[\"somebar\",\"somebar2\"],\"myKey\":\"my Value\"}";
+			var payloadString:String = payload.toString();
+			Assert.assertTrue(payloadString == res1 || payloadString == res2);
 		}
 		
 		[Test]
@@ -57,8 +59,11 @@ package
 			var payload:IPayload = new TrackerPayload();
 			payload.addMap(foo, false, "cx", "co");
 			
-			var res:String = "{\"co\":\"{\\\"myKey\\\":\\\"my Value\\\",\\\"mehh\\\":[\\\"somebar\\\",\\\"somebar2\\\"]}\"}";
-			Assert.assertEquals(res, payload.toString());
+			var res1:String = "{\"co\":\"{\\\"myKey\\\":\\\"my Value\\\",\\\"mehh\\\":[\\\"somebar\\\",\\\"somebar2\\\"]}\"}";
+			var res2:String = "{\"co\":\"{\\\"mehh\\\":[\\\"somebar\\\",\\\"somebar2\\\"],\\\"myKey\\\":\\\"my Value\\\"}\"}";
+			var payloadString:String = payload.toString();
+			
+			Assert.assertTrue(payloadString == res1 || payloadString == res2);
 		}
 		
 		[Test]
@@ -72,8 +77,11 @@ package
 			var payload:IPayload = new TrackerPayload();
 			payload.addMap(foo, true, "cx", "co");
 			
-			var res:String = "{\"cx\":\"eyJteUtleSI6Im15IFZhbHVlIiwibWVoaCI6WyJzb21lYmFyIiwic29tZWJhcjIiXX0=\"}";
-			Assert.assertEquals(res, payload.toString());
+			var res1:String = "{\"cx\":\"eyJteUtleSI6Im15IFZhbHVlIiwibWVoaCI6WyJzb21lYmFyIiwic29tZWJhcjIiXX0=\"}";
+			var res2:String = "{\"cx\":\"eyJtZWhoIjpbInNvbWViYXIiLCJzb21lYmFyMiJdLCJteUtleSI6Im15IFZhbHVlIn0=\"}";
+			var payloadString:String = payload.toString();
+			
+			Assert.assertTrue(payloadString == res1 || payloadString == res2);
 		}
 		
 		[Test]
@@ -96,8 +104,10 @@ package
 			payload = new TrackerPayload();
 			payload.add("foo", foo);
 			
-			res = "{\"foo\":{\"myKey\":\"my Value\",\"mehh\":[\"somebar\",\"somebar2\"]}}";
-			Assert.assertEquals(res, payload.toString());
+            res = "{\"foo\":{\"myKey\":\"my Value\",\"mehh\":[\"somebar\",\"somebar2\"]}}";
+			var res2:String = "{\"foo\":{\"mehh\":[\"somebar\",\"somebar2\"],\"myKey\":\"my Value\"}}";
+			var payloadString:String = payload.toString();
+			Assert.assertTrue(res == payloadString || res2 == payloadString);
 			
 			payload = new TrackerPayload();
 			payload.add("bar", bar);
