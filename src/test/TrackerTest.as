@@ -1,4 +1,4 @@
-package 
+package test
 {
 	import com.snowplowanalytics.snowplow.tracker.*;
 	import com.snowplowanalytics.snowplow.tracker.emitter.*;
@@ -8,7 +8,7 @@ package
 	import flash.net.URLRequestMethod;
 	
 	import org.flexunit.Assert;
-
+	
 	public class TrackerTest
 	{
 		private static const testURL:String = "d3rkrsqld9gmqf.cloudfront.net";
@@ -203,6 +203,6 @@ package
 		public function testTrackScreenView3():void {
 			
 		}
-
+		
 	}
 }
