@@ -7,7 +7,7 @@
 	<groupId >de.tslarusso</groupId >
 	<artifactId >travis-CI-actionscript-demo</artifactId >
 	<version >1.0.0</version >
-	<packaging >swf</packaging >
+	<packaging >swc</packaging >
 	<name >Snowplow ActionScript 3.0 Tracker</name >
 
 	<properties >
