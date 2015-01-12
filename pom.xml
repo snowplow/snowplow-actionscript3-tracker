@@ -72,6 +72,8 @@
 			<groupId>org.sonatype.flexmojos</groupId>
 			<artifactId>flexmojos-unittest-support</artifactId>
 			<version>${flexunit.version}</version>
+			<type>swc</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies >
 
@@ -80,6 +82,16 @@
 		<repository >
 			<id >flex-mojos-repository</id >
 			<url >http://repository.sonatype.org/content/groups/flexgroup</url >
+			<releases >
+				<enabled >true</enabled >
+			</releases >
+			<snapshots >
+				<enabled >false</enabled >
+			</snapshots >
+		</repository >
+		<repository >
+			<id >maven-mojos-repository</id >
+			<url >http://central.maven.org/maven2/org/sonatype/flexmojos</url >
 			<releases >
 				<enabled >true</enabled >
 			</releases >
