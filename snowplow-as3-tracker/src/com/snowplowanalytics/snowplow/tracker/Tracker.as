@@ -100,7 +100,7 @@ package com.snowplowanalytics.snowplow.tracker
 				payload.add(Parameter.FLASH_VERSION, playerVersion);
 				payload.add(Parameter.FLASH_IS_DEBUGGER, isDebugger);
 				payload.add(Parameter.FLASH_HAS_LOCAL_STORAGE, hasLocalStorage);
-				payload.add(Parameter.FLASH_HAS_JAVASCRIPT_ACCESS, hasScriptAccess);
+				payload.add(Parameter.FLASH_HAS_SCRIPT_ACCESS, hasScriptAccess);
 				if (stage != null) {
 					payload.add(Parameter.FLASH_STAGE_SIZE, stage.stageWidth + "x" + stage.stageHeight);	
 				}				
