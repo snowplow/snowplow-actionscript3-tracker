@@ -13,7 +13,7 @@
 	<properties >
 		<flex.sdk.version >4.0.0.14159</flex.sdk.version >
 		<flexmojos.version >4.0-RC2</flexmojos.version >
-		<flexunit.version >0.9</flexunit.version >
+		<flexunit.version >4.0-RC2</flexunit.version >
 	</properties >
 
 	<build >
@@ -59,6 +59,7 @@
 			<type >pom</type >
 		</dependency >
 		<!-- Based on testing library dependency specified, FlexMojos will know how to test your application -->
+		<!--
 		<dependency >
 			<groupId >com.adobe.flexunit</groupId >
 			<artifactId >flexunit</artifactId >
@@ -66,6 +67,14 @@
 			<type >swc</type >
 			<scope >test</scope >
 		</dependency >
+		-->
+		<dependency>
+			<groupId>org.sonatype.flexmojos</groupId>
+			<artifactId>flexmojos-unittest-support</artifactId>
+			<version>${flexunit.version}</version>
+			<type>swc</type>
+			<scope>test</scope>
+		</dependency>
 	</dependencies >
 
 	<!-- Ideally this would go into your ~/.m2/settings.xml file -->
@@ -73,6 +82,16 @@
 		<repository >
 			<id >flex-mojos-repository</id >
 			<url >http://repository.sonatype.org/content/groups/flexgroup</url >
+			<releases >
+				<enabled >true</enabled >
+			</releases >
+			<snapshots >
+				<enabled >false</enabled >
+			</snapshots >
+		</repository >
+		<repository >
+			<id >maven-mojos-repository</id >
+			<url >http://central.maven.org/maven2/org/sonatype/flexmojos</url >
 			<releases >
 				<enabled >true</enabled >
 			</releases >
