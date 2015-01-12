@@ -2,14 +2,20 @@ package
 {
 	import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption;
 	import com.snowplowanalytics.snowplow.tracker.emitter.Emitter;
+	import com.snowplowanalytics.snowplow.tracker.event.EmitterEvent;
 	import com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload;
 	
 	import flash.net.URLRequestMethod;
-
+	
+	import flexunit.framework.Assert;
+	
+	import org.flexunit.async.Async;
+	
 	public class EmitterTest
 	{
 		//    private static String testURL = "segfault.ngrok.com";
 		private static var testURL:String = "d3rkrsqld9gmqf.cloudfront.net";
+		private var callCompleted:Boolean = false;
 		
 		[Test]
 		public function testEmitterConstructor():void {
@@ -38,7 +44,7 @@ package
 		
 		[Test]
 		public function testFlushPost():void {
-			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST, null);
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			
 			var payload:TrackerPayload;
 			var foo:Object = {};
@@ -59,21 +65,57 @@ package
 		[Test]
 		public function testBufferOption():void {
 			var emitter:Emitter = new Emitter(testURL);
-			emitter.setBufferSize(BufferOption.INSTANT);
+			emitter.setBufferSize(BufferOption.DEFAULT);
 		}
 		
-		[Test]
+		private function onSuccess(successCount:int):void {
+			trace("Buffer length for POST/GET:" + successCount);
+			Assert.assertTrue(successCount > 0);
+		}
+		
+		private function handleTimeout(passThroughData:Object):void {
+			if (!callCompleted) {
+				Assert.fail( "Timeout reached before event");          
+			}
+		}
+		
+		[Test(async, description="Test flush buffer")]
 		public function testFlushBuffer():void {
 			
-			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET,
-				function onSuccess(successCount:int):void {
-					trace("Buffer length for POST/GET:" + successCount);
-				},
-				function onFailure(successCount:int, failedEvent:Array):void {
-					trace("Failure, successCount: " + successCount +
-						"\nfailedEvent:\n" + failedEvent.toString());
-				}
+			var timeout:int = 500;
+			callCompleted = false;
+			
+			var onSuccess:Function = Async.asyncHandler(this, 
+				function (event:EmitterEvent, passThroughData:Object):void {
+					callCompleted = true;
+					trace("Buffer length for POST/GET:" + event.successCount);
+					Assert.assertTrue(event.successCount > 0);
+				}, 
+				timeout, 
+				null, 
+				handleTimeout 
 			);
+			
+			var onFailure:Function = Async.asyncHandler(this, 
+				function onFailure(event:EmitterEvent, passThroughData:Object):void {
+					callCompleted = true;
+					trace("Failure, successCount: " + event.successCount +
+						"\nerrorInfo:\n" + event.errorInfo +
+						"\nfailedEvent:\n" + event.toString());
+					Assert.fail( "An error occured flushing the buffer.");   
+				}, 
+				timeout, 
+				null, 
+				handleTimeout 
+			);
+			
+			var emitter:Emitter = new Emitter(testURL, 
+				URLRequestMethod.GET
+			);
+			
+			emitter.addEventListener(EmitterEvent.SUCCESS, onSuccess);
+			emitter.addEventListener(EmitterEvent.FAILURE, onFailure);
+			
 			
 			for (var i:int=0; i < 5; i++) {
 				var payload:TrackerPayload;
@@ -89,7 +131,7 @@ package
 		
 		[Test]
 		public function testMaxBuffer():void {
-			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET, null);
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
 
 			for (var i:int=0; i < 10; i++) {
 				var payload:TrackerPayload;

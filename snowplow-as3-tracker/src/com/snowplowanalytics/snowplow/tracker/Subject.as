@@ -22,8 +22,8 @@ package com.snowplowanalytics.snowplow.tracker
 			
 			// Default Timezone
 			var tzOffset:Number = (new Date()).getTimezoneOffset();
-			var tz:String = "GMT" + 
-							(tzOffset < 0 ? "-" : "+") +
+			var tz:String = "Etc/UTC" + 
+							(tzOffset < 0 ? "" : "+") +
 							Util.padZeroes(Math.floor(tzOffset / 60)) + 
 							":" +
 							Util.padZeroes(tzOffset % 60);

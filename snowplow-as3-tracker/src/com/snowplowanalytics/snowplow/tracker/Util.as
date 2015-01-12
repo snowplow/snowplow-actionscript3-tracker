@@ -185,5 +185,10 @@ package com.snowplowanalytics.snowplow.tracker
 		{ 
 			return Math.round(Math.random() * 1000000);
 	    }
+		
+		public static function clearArray (a:Array):void
+		{
+			a.splice(0, a.length);
+		}
 	}
 }

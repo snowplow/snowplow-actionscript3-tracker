@@ -16,21 +16,22 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 	import com.adobe.net.URI;
 	import com.snowplowanalytics.snowplow.tracker.Constants;
 	import com.snowplowanalytics.snowplow.tracker.Util;
+	import com.snowplowanalytics.snowplow.tracker.event.EmitterEvent;
 	import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
 	import com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload;
 	
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	
-	public class Emitter
+	public class Emitter extends EventDispatcher
 	{
 		private var _uri:URI;
 		private var _buffer:Array = [];
 		
 		protected var bufferSize:int = BufferOption.DEFAULT;
-		protected var successCallback:Function;
-		protected var errorCallback:Function;
 		protected var httpMethod:String = URLRequestMethod.GET;
 		
 		/**
@@ -40,20 +41,14 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		 * @param successCallback The callback function to handle success cases when sending events.
 		 * @param errorCallback The callback function to handle error cases when sending events.
 		 */
-		public function Emitter(uri:String, httpMethod:String = "get", successCallback:Function = null, errorCallback:Function = null) {
+		public function Emitter(uri:String, httpMethod:String = "get") {
 			if (httpMethod == URLRequestMethod.GET) {
 				_uri = new URI("http://" + uri + "/i");
 			} else { // POST
 				_uri = new URI("http://" + uri + "/" + Constants.PROTOCOL_VENDOR + "/" + Constants.PROTOCOL_VERSION);
 			}
 			
-			this.successCallback = successCallback;
-			this.errorCallback = errorCallback;
 			this.httpMethod = httpMethod;
-			
-			if (httpMethod == URLRequestMethod.GET) {
-				this.setBufferSize(BufferOption.INSTANT);
-			}
 		}
 		
 		/**
@@ -83,11 +78,12 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 			{
 				if (unsentPayloads.length == 0) 
 				{
-					if (successCallback != null)
-						successCallback(successCount);
+					dispatchEvent(new EmitterEvent(EmitterEvent.SUCCESS, successCount));
 				} 
-				else if (errorCallback != null)
-					errorCallback(successCount, unsentPayloads);
+				else 
+				{
+					dispatchEvent(new EmitterEvent(EmitterEvent.FAILURE, successCount, unsentPayloads, "Not all items in buffer were sent"));
+				}
 			}
 		}
 		
@@ -128,7 +124,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 				
 				var eventMaps:Array = [];
 				for each (var payload:IPayload in _buffer) {
-					eventMaps.push(postPayload.getMap());
+					eventMaps.push(payload.getMap());
 				}
 
 				postPayload.setData(eventMaps);
@@ -136,24 +132,18 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 				sendPostData(postPayload,
 					function onPostSuccess (data:*):void 
 					{
-						if (successCallback != null) 
-						{
-							successCallback(_buffer.length);
-						}
+						dispatchEvent(new EmitterEvent(EmitterEvent.SUCCESS, _buffer.length));
 					},
-					function onPostError ():void 
+					function onPostError (event:Event):void 
 					{
-						if (errorCallback != null) 
-						{
-							unsentPayload.add(postPayload);
-							errorCallback(0, unsentPayloads);
-						}
+						unsentPayload.push(postPayload);
+						dispatchEvent(new EmitterEvent(EmitterEvent.FAILURE, 0, unsentPayloads, event.toString()));
 					}
 				);
 			}
 			
 			// Empties current buffer
-			_buffer.clear();
+			Util.clearArray(_buffer);
 		}
 		
 		protected function sendPostData(payload:IPayload, successCallback:Function, errorCallback:Function):void

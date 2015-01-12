@@ -39,9 +39,16 @@ package
 			s2.setColorDepth(24);
 			tracker.setSubject(s2);
 			var subjectPairs:Object = {};
-			subjectPairs["tz"] = "Etc/UTC";
-			subjectPairs["cd"] = "24";
-			Assert.assertEquals(subjectPairs, tracker.getSubject().getSubject());
+
+			var tzOffset:Number = (new Date()).getTimezoneOffset();
+		
+			subjectPairs["tz"] = "Etc/UTC"  + 
+				(tzOffset < 0 ? "" : "+") +
+				Util.padZeroes(Math.floor(tzOffset / 60)) + 
+				":" +
+				Util.padZeroes(tzOffset % 60);
+			subjectPairs["cd"] = 24;
+			Assert.assertTrue(Helpers.compareObjects(subjectPairs, tracker.getSubject().getSubject()));
 		}
 		
 		[Test]
@@ -184,7 +191,7 @@ package
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
-			contextList.add(context);
+			contextList.push(context);
 			
 			tracker.trackScreenView(null, "screen_1", contextList, 0);
 		}

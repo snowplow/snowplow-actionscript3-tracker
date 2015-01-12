@@ -74,7 +74,7 @@ package com.snowplowanalytics.snowplow.tracker
 					// We can do better here, rather than re-iterate through the list
 					var contextDataList:Array = [];
 					for each(var schemaPayload:SchemaPayload in context) {
-						contextDataList.add(schemaPayload.getMap());
+						contextDataList.push(schemaPayload.getMap());
 					}
 					
 					envelope.setData(contextDataList);

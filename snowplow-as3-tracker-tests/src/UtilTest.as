@@ -38,9 +38,11 @@ package
 			
 			map["list"] = list;
 			
+			var res1:String = "{\"list\":[\"some\",\"stuff\"],\"foo\":\"bar\"}";
+			var res2:String = "{\"foo\":\"bar\",\"list\":[\"some\",\"stuff\"]}";
 			var node:String = JSON.encode(map);
 			
-			Assert.assertEquals("{\"list\":[\"some\",\"stuff\"],\"foo\":\"bar\"}", node);
+			Assert.assertTrue(node == res1 || node == res2);
 		}
 
 	}

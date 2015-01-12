@@ -26,6 +26,7 @@
     <classEntry path="com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.util.Preconditions"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.util.UUID"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.event.EmitterEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

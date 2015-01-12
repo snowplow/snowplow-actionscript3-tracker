@@ -33,7 +33,7 @@ package com.snowplowanalytics.snowplow.tracker.payload
 				return;
 			}
 			
-			trace("Adding new key: {} with value: {}", key, value);
+			trace("Adding new key: {" + key + "} with value: {" + value + "}");
 			objectNode[key] = value;
 		}
 		
