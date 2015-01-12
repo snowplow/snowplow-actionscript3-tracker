@@ -1,6 +1,6 @@
 # ActionScript 3.0 Analytics for Snowplow
 
-[ ![Build Status] [travis-image] ] [travis]
+[ ![Build Status] [travis-image] ] [travis] [ ![Release] [release-image] ] [releases] [ ![License] [license-image] ] [license]
 
 ## Overview
 
@@ -31,6 +31,12 @@ limitations under the License.
 [travis]: https://travis-ci.org/snowplow/snowplow-actionscript3-tracker
 [travis-image]: https://travis-ci.org/snowplow/snowplow-actionscript3-tracker.png?branch=master
 
+[release-image]: http://img.shields.io/badge/release-0.1.0-e14a27.svg?style=flat
+[releases]: https://github.com/snowplow/snowplow-actionscript3-tracker/releases
+
+[license-image]: http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat
+[license]: http://www.apache.org/licenses/LICENSE-2.0
+
 [snowplow]: http://snowplowanalytics.com/
 [as3]: http://www.adobe.com/devnet/actionscript.html
 
@@ -43,5 +49,3 @@ limitations under the License.
 [setup]: https://github.com/snowplow/snowplow/wiki/ActionScript3-Tracker-Setup
 [roadmap]: https://github.com/snowplow/snowplow/wiki/Product-roadmap
 [contributing]: https://github.com/snowplow/snowplow/wiki/Contributing
-
-[license]: http://www.apache.org/licenses/LICENSE-2.0
