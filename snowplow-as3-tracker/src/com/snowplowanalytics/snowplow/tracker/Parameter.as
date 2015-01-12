@@ -76,12 +76,12 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const SV_NAME:String = "name";
 		
 		// Flash Context
-		public static const FLASH_PLAYER_TYPE:String = "fl_pt";
-		public static const FLASH_VERSION:String = "fl_v";
-		public static const FLASH_STAGE_SIZE:String = "fl_sz";
-		public static const FLASH_IS_DEBUGGER:String = "fl_dbg";
-		public static const FLASH_HAS_LOCAL_STORAGE:String = "fl_ls";
-		public static const FLASH_HAS_SCRIPT_ACCESS:String = "fl_sa";
+		public static const FLASH_PLAYER_TYPE:String = "playerType";
+		public static const FLASH_VERSION:String = "version";
+		public static const FLASH_STAGE_SIZE:String = "stageSize";
+		public static const FLASH_IS_DEBUGGER:String = "isDebugger";
+		public static const FLASH_HAS_LOCAL_STORAGE:String = "hasLocalStorage";
+		public static const FLASH_HAS_SCRIPT_ACCESS:String = "hasScriptAccess";
 		
 	}
 }
