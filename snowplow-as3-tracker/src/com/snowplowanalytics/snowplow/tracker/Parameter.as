@@ -81,7 +81,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const FLASH_STAGE_SIZE:String = "fl_sz";
 		public static const FLASH_IS_DEBUGGER:String = "fl_dbg";
 		public static const FLASH_HAS_LOCAL_STORAGE:String = "fl_ls";
-		public static const FLASH_HAS_JAVASCRIPT_ACCESS:String = "fl_ja";
+		public static const FLASH_HAS_SCRIPT_ACCESS:String = "fl_sa";
 		
 	}
 }
