@@ -71,16 +71,18 @@ package
 			trace("Buffer length for POST/GET:" + successCount);
 			Assert.assertTrue(successCount > 0);
 		}
-		
+
+		/*
 		private function handleTimeout(passThroughData:Object):void {
 			if (!callCompleted) {
 				Assert.fail( "Timeout reached before event");          
 			}
 		}
+		*/
 		
-		[Test(async, description="Test flush buffer")]
+		[Test()]
 		public function testFlushBuffer():void {
-			
+			/*
 			var timeout:int = 500;
 			callCompleted = false;
 			
@@ -107,13 +109,13 @@ package
 				null, 
 				handleTimeout 
 			);
-			
+			*/
 			var emitter:Emitter = new Emitter(testURL, 
 				URLRequestMethod.GET
 			);
 			
-			emitter.addEventListener(EmitterEvent.SUCCESS, onSuccess);
-			emitter.addEventListener(EmitterEvent.FAILURE, onFailure);
+			//emitter.addEventListener(EmitterEvent.SUCCESS, onSuccess);
+			//emitter.addEventListener(EmitterEvent.FAILURE, onFailure);
 			
 			
 			for (var i:int=0; i < 5; i++) {
