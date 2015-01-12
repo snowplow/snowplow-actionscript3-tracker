@@ -31,7 +31,7 @@ limitations under the License.
 [travis]: https://travis-ci.org/snowplow/snowplow-actionscript3-tracker
 [travis-image]: https://travis-ci.org/snowplow/snowplow-actionscript3-tracker.png?branch=master
 
-[release-image]: http://img.shields.io/badge/release-0.1.0-e14a27.svg?style=flat
+[release-image]: http://img.shields.io/badge/release-0.1.0-6d0617.svg?style=flat
 [releases]: https://github.com/snowplow/snowplow-actionscript3-tracker/releases
 
 [license-image]: http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat
