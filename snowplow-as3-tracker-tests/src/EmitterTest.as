@@ -13,8 +13,7 @@ package
 	
 	public class EmitterTest
 	{
-		//    private static String testURL = "segfault.ngrok.com";
-		private static var testURL:String = "d3rkrsqld9gmqf.cloudfront.net";
+		private static var testURL:String = "astracker.snplow.com";
 		private var callCompleted:Boolean = false;
 		
 		[Test]
@@ -97,7 +96,7 @@ package
 			);
 			
 			var onFailure:Function = Async.asyncHandler(this, 
-				function onFailure(event:EmitterEvent, passThroughData:Object):void {
+				function (event:EmitterEvent, passThroughData:Object):void {
 					callCompleted = true;
 					trace("Failure, successCount: " + event.successCount +
 						"\nerrorInfo:\n" + event.errorInfo +

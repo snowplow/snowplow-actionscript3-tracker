@@ -111,7 +111,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 						},
 						function onGetError ():void {
 							totalCount++;
-							unsentPayloads.add(payload);
+							unsentPayloads.push(payload);
 							checkBufferComplete(successCount, totalCount, totalPayloads, unsentPayloads);
 						}
 					);

@@ -14,7 +14,7 @@ package
 	
 	public class TrackerTest
 	{
-		private static const testURL:String = "d3rkrsqld9gmqf.cloudfront.net";
+		private static const testURL:String = "astracker.snplow.com";
 		
 		[Test]
 		public function testDefaultPlatform():void {
