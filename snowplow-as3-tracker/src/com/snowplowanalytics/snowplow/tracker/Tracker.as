@@ -18,6 +18,12 @@ package com.snowplowanalytics.snowplow.tracker
 	import com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload;
 	import com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload;
 	import com.snowplowanalytics.snowplow.tracker.util.Preconditions;
+	
+	import flash.display.Stage;
+	import flash.external.ExternalInterface;
+	import flash.net.LocalConnection;
+	import flash.net.SharedObject;
+	import flash.system.Capabilities;
 
 	public class Tracker
 	{
@@ -28,15 +34,23 @@ package com.snowplowanalytics.snowplow.tracker
 		private var namespace:String;
 		private var trackerVersion:String;
 		private var subject:Subject;
+		private var stage:Stage;
+		
+		private var playerType:String;
+		private var playerVersion:String;
+		private var isDebugger:Boolean;
+		private var hasLocalStorage:Boolean;
+		private var hasScriptAccess:Boolean;
 		
 		/**
 		 * @param emitter Emitter to which events will be sent
 		 * @param subject Subject to be tracked
 		 * @param namespace Identifier for the Tracker instance
 		 * @param appId Application ID
+		 * @param stage The flash stage object.  used for adding stage info to payload.
 		 * @param base64Encoded Whether JSONs in the payload should be base-64 encoded
 		 */
-		function Tracker(emitter:Emitter, subject:Subject, namespace:String, appId:String, base64Encoded:Boolean = true) {
+		function Tracker(emitter:Emitter, subject:Subject, namespace:String, appId:String, stage:Stage = null, base64Encoded:Boolean = true) {
 				this.emitter = emitter;
 				this.appId = appId;
 				this.base64Encoded = base64Encoded;
@@ -44,6 +58,21 @@ package com.snowplowanalytics.snowplow.tracker
 				this.subject = subject;
 				this.trackerVersion = Version.TRACKER;
 				this.platform = DevicePlatform.DESKTOP;
+				this.stage = stage;
+				
+				this.playerType = Capabilities.playerType;
+				this.playerVersion = Capabilities.version;
+				this.isDebugger = Capabilities.isDebugger;
+				try 
+				{
+					SharedObject.getLocal("test");
+					this.hasLocalStorage = true;
+				} 
+				catch (e:Error)
+				{
+					this.hasLocalStorage = false;
+				}
+				this.hasScriptAccess = ExternalInterface.available;
 			}
 		
 		/**
@@ -66,6 +95,16 @@ package com.snowplowanalytics.snowplow.tracker
 				payload.add(Parameter.TIMESTAMP,
 					(timestamp == 0 ? Util.getTimestamp() : String(timestamp)));
 				
+				// Add flash information
+				payload.add(Parameter.FLASH_PLAYER_TYPE, playerType);
+				payload.add(Parameter.FLASH_VERSION, playerVersion);
+				payload.add(Parameter.FLASH_IS_DEBUGGER, isDebugger);
+				payload.add(Parameter.FLASH_HAS_LOCAL_STORAGE, hasLocalStorage);
+				payload.add(Parameter.FLASH_HAS_JAVASCRIPT_ACCESS, hasScriptAccess);
+				if (stage != null) {
+					payload.add(Parameter.FLASH_STAGE_SIZE, stage.stageWidth + "x" + stage.stageHeight);	
+				}				
+
 				// Encodes context data
 				if (context != null && context.length > 0) {
 					var envelope:SchemaPayload = new SchemaPayload();

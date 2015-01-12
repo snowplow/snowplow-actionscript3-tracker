@@ -7,6 +7,9 @@ package
 	
 	import flash.net.URLRequestMethod;
 	
+	import mx.core.Application;
+	import mx.core.FlexGlobals;
+	
 	import org.flexunit.Assert;
 	
 	public class TrackerTest
@@ -17,7 +20,7 @@ package
 		public function testDefaultPlatform():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", false);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
 			Assert.assertEquals(DevicePlatform.DESKTOP, tracker.getPlatform());
 		}
 		
@@ -25,7 +28,7 @@ package
 		public function testSetPlatform():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", false);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
 			tracker.setPlatform(DevicePlatform.CONNECTED_TV);
 			Assert.assertEquals(DevicePlatform.CONNECTED_TV, tracker.getPlatform());
 		}
@@ -34,7 +37,7 @@ package
 		public function testSetSubject():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var s1:Subject = new Subject();
-			var tracker:Tracker = new Tracker(emitter, s1, "AF003", "cloudfront", false);
+			var tracker:Tracker = new Tracker(emitter, s1, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
 			var s2:Subject = new Subject();
 			s2.setColorDepth(24);
 			tracker.setSubject(s2);
@@ -76,7 +79,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", false);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -140,7 +143,7 @@ package
 		[Test]
 		public function testTrackEcommerceTransaction():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
-			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", false);
+			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -181,7 +184,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", false);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			//emitter.setBufferOption(BufferOption.Instant);
 			
