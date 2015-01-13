@@ -22,6 +22,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const SCHEMA_CONTEXTS:String = "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0";
 		public static const SCHEMA_UNSTRUCT_EVENT:String = "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0";
 		public static const SCHEMA_SCREEN_VIEW:String = "iglu:com.snowplowanalytics.snowplow/screen_view/jsonschema/1-0-0";
+		public static const SCHEMA_FLASH:String = "iglu:com.snowplowanalytics.snowplow/flash_context/jsonschema/1-0-0";
 		
 		public static const EVENT_PAGE_VIEW:String = "pv";
 		public static const EVENT_STRUCTURED:String = "se";

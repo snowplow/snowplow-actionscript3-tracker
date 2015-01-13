@@ -96,15 +96,26 @@ package com.snowplowanalytics.snowplow.tracker
 					(timestamp == 0 ? Util.getTimestamp() : String(timestamp)));
 				
 				// Add flash information
-				payload.add(Parameter.FLASH_PLAYER_TYPE, playerType);
-				payload.add(Parameter.FLASH_VERSION, playerVersion);
-				payload.add(Parameter.FLASH_IS_DEBUGGER, isDebugger);
-				payload.add(Parameter.FLASH_HAS_LOCAL_STORAGE, hasLocalStorage);
-				payload.add(Parameter.FLASH_HAS_SCRIPT_ACCESS, hasScriptAccess);
+				if (context == null) {
+					context = [];
+				}
+				
+				var flashData:TrackerPayload = new TrackerPayload();
+				flashData.add(Parameter.FLASH_PLAYER_TYPE, playerType);
+				flashData.add(Parameter.FLASH_VERSION, playerVersion);
+				flashData.add(Parameter.FLASH_IS_DEBUGGER, isDebugger);
+				flashData.add(Parameter.FLASH_HAS_LOCAL_STORAGE, hasLocalStorage);
+				flashData.add(Parameter.FLASH_HAS_SCRIPT_ACCESS, hasScriptAccess);
 				if (stage != null) {
-					payload.add(Parameter.FLASH_STAGE_SIZE, stage.stageWidth + "x" + stage.stageHeight);	
+					flashData.add(Parameter.FLASH_STAGE_SIZE, stage.stageWidth + "x" + stage.stageHeight);	
 				}				
 
+				var flashPayload:SchemaPayload = new SchemaPayload();
+				flashPayload.setSchema(Constants.SCHEMA_FLASH);
+				flashPayload.setData(flashData.getMap());
+				
+				context.push(flashPayload);
+				
 				// Encodes context data
 				if (context != null && context.length > 0) {
 					var envelope:SchemaPayload = new SchemaPayload();
@@ -117,7 +128,7 @@ package com.snowplowanalytics.snowplow.tracker
 					}
 					
 					envelope.setData(contextDataList);
-					payload.addMap(envelope.getMap());
+					payload.addMap(envelope.getMap(), this.base64Encoded, Parameter.CONTEXT_ENCODED, Parameter.CONTEXT);
 				}
 				
 				if (this.subject != null) {
