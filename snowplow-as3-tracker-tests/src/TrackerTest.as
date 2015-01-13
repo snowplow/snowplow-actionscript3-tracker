@@ -88,18 +88,20 @@ package
 		}
 		
 		[Test]
-		public function testTrackPageView3():void {
+		public function testTrackPageViewPost():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
-			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
 			someContext["someContextKey"] = "testTrackPageView3";
+
+			var context:SchemaPayload = new SchemaPayload();
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
 			context.setData(someContext);
+			
 			var contextList:Array = [];
 			contextList.push(context);
 			
@@ -107,6 +109,75 @@ package
 			
 			emitter.flushBuffer();
 		}
+		
+		[Test]
+		public function testTrackPageViewPostBase64():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+			var subject:Subject = new Subject();
+			subject.setViewPort(320, 480);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView3";
+			
+			var context:SchemaPayload = new SchemaPayload();
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			tracker.trackPageView("www.mypage.com", "My Page", "www.me.com", contextList);
+			
+			emitter.flushBuffer();
+		}		
+		
+		[Test]
+		public function testTrackPageViewGet():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+			var subject:Subject = new Subject();
+			subject.setViewPort(320, 480);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView3";
+			
+			var context:SchemaPayload = new SchemaPayload();
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			tracker.trackPageView("www.mypage.com", "My Page", "www.me.com", contextList);
+			
+			emitter.flushBuffer();
+		}
+		
+		[Test]
+		public function testTrackPageViewGetBase64():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+			var subject:Subject = new Subject();
+			subject.setViewPort(320, 480);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView3";
+			
+			var context:SchemaPayload = new SchemaPayload();
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			tracker.trackPageView("www.mypage.com", "My Page", "www.me.com", contextList);
+			
+			emitter.flushBuffer();
+		}		
 		
 		[Test]
 		public function testTrackStructuredEvent():void {
@@ -154,9 +225,81 @@ package
 		}
 		
 		[Test]
-		public function testTrackEcommerceTransaction():void {
+		public function testTrackEcommerceTransactionPost():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			
+			var context:SchemaPayload = new SchemaPayload();
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView2";
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			var transactionItem:TransactionItem = new TransactionItem("order-8", "no_sku",
+				34.0, 1, "Big Order", "Food", "USD", contextList);
+			var transactionItemLinkedList:Array = [];
+			transactionItemLinkedList.push(transactionItem);
+			tracker.trackEcommerceTransaction("order-7", 25.0, "no_affiliate", 0.0, 0.0, "Dover",
+				"Delaware", "US", "USD", transactionItemLinkedList);
+			
+			emitter.flushBuffer();
+		}
+		
+		[Test]
+		public function testTrackEcommerceTransactionPostBase64():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			
+			var context:SchemaPayload = new SchemaPayload();
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView2";
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			var transactionItem:TransactionItem = new TransactionItem("order-8", "no_sku",
+				34.0, 1, "Big Order", "Food", "USD", contextList);
+			var transactionItemLinkedList:Array = [];
+			transactionItemLinkedList.push(transactionItem);
+			tracker.trackEcommerceTransaction("order-7", 25.0, "no_affiliate", 0.0, 0.0, "Dover",
+				"Delaware", "US", "USD", transactionItemLinkedList);
+			
+			emitter.flushBuffer();
+		}
+		
+		[Test]
+		public function testTrackEcommerceTransactionGet():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			
+			var context:SchemaPayload = new SchemaPayload();
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView2";
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			var transactionItem:TransactionItem = new TransactionItem("order-8", "no_sku",
+				34.0, 1, "Big Order", "Food", "USD", contextList);
+			var transactionItemLinkedList:Array = [];
+			transactionItemLinkedList.push(transactionItem);
+			tracker.trackEcommerceTransaction("order-7", 25.0, "no_affiliate", 0.0, 0.0, "Dover",
+				"Delaware", "US", "USD", transactionItemLinkedList);
+			
+			emitter.flushBuffer();
+		}
+		
+		[Test]
+		public function testTrackEcommerceTransactionGetBase64():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -193,7 +336,7 @@ package
 		}
 		
 		[Test]
-		public function testTrackScreenView():void {
+		public function testTrackScreenViewPost():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
@@ -211,6 +354,67 @@ package
 			
 			tracker.trackScreenView(null, "screen_1", contextList, 0);
 		}
+		
+		[Test]
+		public function testTrackScreenViewPostBase64():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+			var subject:Subject = new Subject();
+			subject.setViewPort(320, 480);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			//emitter.setBufferOption(BufferOption.Instant);
+			
+			var context:SchemaPayload = new SchemaPayload();
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView2";
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			tracker.trackScreenView(null, "screen_1", contextList, 0);
+		}
+		
+		[Test]
+		public function testTrackScreenViewGet():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+			var subject:Subject = new Subject();
+			subject.setViewPort(320, 480);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			//emitter.setBufferOption(BufferOption.Instant);
+			
+			var context:SchemaPayload = new SchemaPayload();
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView2";
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			tracker.trackScreenView(null, "screen_1", contextList, 0);
+		}
+		
+		[Test]
+		public function testTrackScreenViewGetBase64():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+			var subject:Subject = new Subject();
+			subject.setViewPort(320, 480);
+			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+			//emitter.setBufferOption(BufferOption.Instant);
+			
+			var context:SchemaPayload = new SchemaPayload();
+			var someContext:Object = {};
+			someContext["someContextKey"] = "testTrackPageView2";
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setData(someContext);
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			tracker.trackScreenView(null, "screen_1", contextList, 0);
+		}
+		
 		
 		[Test]
 		public function testTrackScreenView1():void {
