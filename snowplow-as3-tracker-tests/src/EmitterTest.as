@@ -28,6 +28,26 @@ package
 	{
 		private static var testURL:String = "astracker.snplow.com";
 		private var callCompleted:Boolean = false;
+		private var testPayloadData:Object = {
+			"schema":"iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-0",
+			"data":[
+				{
+					"vp":"320x480",
+					"tv":"as3-0.1.0",
+					"p":"pc",
+					"url":"www.mypage.com",
+					"tna":"AF003",
+					"tz":"Etc/UTC-2:00",
+					"eid":"ec7585f8-50a0-4f74-b9eb-b10e9fc1f3b0",
+					"page":"My Page",
+					"e":"pv",
+					"refr":"www.me.com",
+					"aid":"cloudfront",
+					"co":"{\"schema\":\"iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0\",\"data\":[{\"schema\":\"iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1\",\"data\":{\"targetUrl\":\"http://www.google.com\"}},{\"schema\":\"iglu:com.snowplowanalytics.snowplow/flash_context/jsonschema/1-0-0\",\"data\":{\"hasLocalStorage\":true,\"stageSize\":{\"height\":893,\"width\":1131},\"version\":\"WIN 11,1,102,63\",\"isDebugger\":true,\"playerType\":\"ActiveX\",\"hasScriptAccess\":true}}]}","dtm":"1421582265712"
+				}
+			]
+		};
+		
 		
 		[Test]
 		public function testEmitterConstructor():void {
@@ -43,11 +63,8 @@ package
 		public function testFlushGet():void {
 			var emitter:Emitter = new Emitter(testURL);
 			
-			var payload:TrackerPayload;
-			var foo:Object = {};
-			foo["test"] = "testFlushBuffer";
-			payload = new TrackerPayload();
-			payload.addMap(foo);
+			var payload:TrackerPayload = new TrackerPayload();
+			payload.addMap(testPayloadData);
 			
 			emitter.addToBuffer(payload);
 			
@@ -59,15 +76,8 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			
 			var payload:TrackerPayload;
-			var foo:Object = {};
-			var bar:Array = [];
-			bar.push("somebar");
-			bar.push("somebar");
-			foo["test"] = "testMaxBuffer";
-			foo["mehh"] = bar;
-	
 			payload = new TrackerPayload();
-			payload.addMap(foo);
+			payload.addMap(testPayloadData);
 			
 			emitter.addToBuffer(payload);
 			
@@ -133,10 +143,8 @@ package
 			
 			for (var i:int=0; i < 5; i++) {
 				var payload:TrackerPayload;
-				var foo:Object = {};
-				foo["test"] = "testFlushBuffer";
 				payload = new TrackerPayload();
-				payload.addMap(foo);
+				payload.addMap(testPayloadData);
 				
 				emitter.addToBuffer(payload);
 			}
@@ -149,10 +157,8 @@ package
 
 			for (var i:int=0; i < 10; i++) {
 				var payload:TrackerPayload;
-				var foo:Object = {};
-				foo["test"] = "testFlushBuffer";
 				payload = new TrackerPayload();
-				payload.addMap(foo);
+				payload.addMap(testPayloadData);
 				
 				emitter.addToBuffer(payload);
 			}

@@ -96,10 +96,10 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView3";
+			someContext["targetUrl"] = "http://www.google.com";
 
 			var context:SchemaPayload = new SchemaPayload();
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			
 			var contextList:Array = [];
@@ -119,10 +119,10 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView3";
+			someContext["targetUrl"] = "http://www.google.com";
 			
 			var context:SchemaPayload = new SchemaPayload();
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			
 			var contextList:Array = [];
@@ -142,10 +142,10 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView3";
+			someContext["targetUrl"] = "http://www.google.com";
 			
 			var context:SchemaPayload = new SchemaPayload();
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			
 			var contextList:Array = [];
@@ -165,10 +165,10 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView3";
+			someContext["targetUrl"] = "http://www.google.com";
 			
 			var context:SchemaPayload = new SchemaPayload();
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			
 			var contextList:Array = [];
@@ -232,8 +232,9 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView2";
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			someContext["targetUrl"] = "http://www.google.com";
+
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -256,8 +257,9 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView2";
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			someContext["targetUrl"] = "http://www.google.com";
+
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -280,8 +282,9 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView2";
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			someContext["targetUrl"] = "http://www.google.com";
+
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -304,8 +307,9 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView2";
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			someContext["targetUrl"] = "http://www.google.com";
+
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -346,8 +350,9 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView2";
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			someContext["targetUrl"] = "http://www.google.com";
+
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -366,8 +371,9 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView2";
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			someContext["targetUrl"] = "http://www.google.com";
+
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -386,8 +392,9 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView2";
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			someContext["targetUrl"] = "http://www.google.com";
+
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -406,8 +413,9 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["someContextKey"] = "testTrackPageView2";
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/example/jsonschema/1-0-0");
+			someContext["targetUrl"] = "http://www.google.com";
+
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
