@@ -63,6 +63,7 @@ package com.snowplowanalytics.snowplow.tracker
 				this.playerType = Capabilities.playerType;
 				this.playerVersion = Capabilities.version;
 				this.isDebugger = Capabilities.isDebugger;
+				
 				try 
 				{
 					SharedObject.getLocal("test");
@@ -107,7 +108,7 @@ package com.snowplowanalytics.snowplow.tracker
 				flashData.add(Parameter.FLASH_HAS_LOCAL_STORAGE, hasLocalStorage);
 				flashData.add(Parameter.FLASH_HAS_SCRIPT_ACCESS, hasScriptAccess);
 				if (stage != null) {
-					flashData.add(Parameter.FLASH_STAGE_SIZE, stage.stageWidth + "x" + stage.stageHeight);	
+					flashData.add(Parameter.FLASH_STAGE_SIZE, { "width": stage.stageWidth, "height": stage.stageHeight});	
 				}				
 
 				var flashPayload:SchemaPayload = new SchemaPayload();
