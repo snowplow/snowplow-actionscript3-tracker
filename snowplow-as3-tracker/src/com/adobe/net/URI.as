@@ -1197,9 +1197,9 @@ package com.adobe.net
 				// Need to escape the name/value pair so that they
 				// don't conflict with the query syntax (specifically
 				// '=', '&', and <whitespace>).
-				name = queryPartEscape(name);
-				value = queryPartEscape(value);
-				
+				name = encodeURIComponent(name);
+				value = encodeURIComponent(value);
+
 				tmpPair = name;
 				
 				if (value.length > 0)
