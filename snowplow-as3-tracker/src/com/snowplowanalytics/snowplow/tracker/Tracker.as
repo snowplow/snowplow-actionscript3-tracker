@@ -57,7 +57,7 @@ package com.snowplowanalytics.snowplow.tracker
 				this.namespace = namespace;
 				this.subject = subject;
 				this.trackerVersion = Version.TRACKER;
-				this.platform = DevicePlatform.DESKTOP;
+				this.platform = DevicePlatform.WEB;
 				this.stage = stage;
 				
 				this.playerType = Capabilities.playerType;
