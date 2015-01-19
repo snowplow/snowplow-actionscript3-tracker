@@ -238,14 +238,14 @@ package com.snowplowanalytics.snowplow.tracker
 		public function trackUnstructuredEvent(eventData:SchemaPayload, context:Array = null,
 			timestamp:Number = 0):void 
 		{
-			var payload:IPayload = new TrackerPayload();
 			var envelope:SchemaPayload = new SchemaPayload();
-			
 			envelope.setSchema(Constants.SCHEMA_UNSTRUCT_EVENT);
 			envelope.setData(eventData.getMap());
 			
+			var payload:IPayload = new TrackerPayload();
 			payload.add(Parameter.EVENT, Constants.EVENT_UNSTRUCTURED);
-			payload.addMap(envelope.getMap());
+			payload.addMap(envelope.getMap(), base64Encoded,
+				Parameter.UNSTRUCTURED_ENCODED, Parameter.UNSTRUCTURED);
 			
 			completePayload(payload, context, timestamp);
 			
