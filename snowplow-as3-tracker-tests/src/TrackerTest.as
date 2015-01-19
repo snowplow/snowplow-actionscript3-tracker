@@ -33,7 +33,7 @@ package
 		public function testDefaultPlatform():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
 			Assert.assertEquals(DevicePlatform.DESKTOP, tracker.getPlatform());
 		}
 		
@@ -41,7 +41,7 @@ package
 		public function testSetPlatform():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
 			tracker.setPlatform(DevicePlatform.CONNECTED_TV);
 			Assert.assertEquals(DevicePlatform.CONNECTED_TV, tracker.getPlatform());
 		}
@@ -50,7 +50,7 @@ package
 		public function testSetSubject():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var s1:Subject = new Subject();
-			var tracker:Tracker = new Tracker(emitter, s1, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", s1, FlexGlobals.topLevelApplication.stage, false);
 			var s2:Subject = new Subject();
 			s2.setColorDepth(24);
 			tracker.setSubject(s2);
@@ -71,7 +71,8 @@ package
 		public function testSetSchema():void {
 			
 		}
-		
+
+		/*
 		[Test]
 		public function testTrackPageView():void {
 			
@@ -92,7 +93,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
@@ -115,7 +116,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
@@ -138,7 +139,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
@@ -161,7 +162,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
@@ -178,7 +179,7 @@ package
 			
 			emitter.flushBuffer();
 		}		
-		
+*/		
 		[Test]
 		public function testTrackStructuredEvent():void {
 			
@@ -227,7 +228,7 @@ package
 		[Test]
 		public function testTrackEcommerceTransactionPost():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
-			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -252,7 +253,7 @@ package
 		[Test]
 		public function testTrackEcommerceTransactionPostBase64():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
-			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -277,7 +278,7 @@ package
 		[Test]
 		public function testTrackEcommerceTransactionGet():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
-			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -302,7 +303,7 @@ package
 		[Test]
 		public function testTrackEcommerceTransactionGetBase64():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
-			var tracker:Tracker = new Tracker(emitter, null, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -344,7 +345,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			//emitter.setBufferOption(BufferOption.Instant);
 			
@@ -365,7 +366,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			//emitter.setBufferOption(BufferOption.Instant);
 			
@@ -386,7 +387,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, false);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			//emitter.setBufferOption(BufferOption.Instant);
 			
@@ -407,7 +408,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
-			var tracker:Tracker = new Tracker(emitter, subject, "AF003", "cloudfront", FlexGlobals.topLevelApplication.stage, true);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			//emitter.setBufferOption(BufferOption.Instant);
 			

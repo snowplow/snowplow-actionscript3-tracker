@@ -50,7 +50,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param stage The flash stage object.  used for adding stage info to payload.
 		 * @param base64Encoded Whether JSONs in the payload should be base-64 encoded
 		 */
-		function Tracker(emitter:Emitter, subject:Subject, namespace:String, appId:String, stage:Stage = null, base64Encoded:Boolean = true) {
+		function Tracker(emitter:Emitter, namespace:String, appId:String, subject:Subject = null, stage:Stage = null, base64Encoded:Boolean = true) {
 				this.emitter = emitter;
 				this.appId = appId;
 				this.base64Encoded = base64Encoded;
@@ -170,24 +170,24 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param context Custom context for the event
 		 * @param timestamp Optional user-provided timestamp for the event
 		 */
-		public function trackPageView(pageUrl:String, pageTitle:String, referrer:String, context:Array = null, timestamp:Number = 0):void 
-		{
-			// Precondition checks
-			Preconditions.checkNotNull(pageUrl);
-			Preconditions.checkArgument(!Util.isNullOrEmpty(pageUrl), "pageUrl cannot be empty");
-			Preconditions.checkArgument(!Util.isNullOrEmpty(pageTitle), "pageTitle cannot be empty");
-			Preconditions.checkArgument(!Util.isNullOrEmpty(referrer), "referrer cannot be empty");
-			
-			var payload:IPayload = new TrackerPayload();
-			payload.add(Parameter.EVENT, Constants.EVENT_PAGE_VIEW);
-			payload.add(Parameter.PAGE_URL, pageUrl);
-			payload.add(Parameter.PAGE_TITLE, pageTitle);
-			payload.add(Parameter.PAGE_REFR, referrer);
-			
-			completePayload(payload, context, timestamp);
-			
-			addTrackerPayload(payload);
-		}
+//		public function trackPageView(pageUrl:String, pageTitle:String, referrer:String, context:Array = null, timestamp:Number = 0):void 
+//		{
+//			// Precondition checks
+//			Preconditions.checkNotNull(pageUrl);
+//			Preconditions.checkArgument(!Util.isNullOrEmpty(pageUrl), "pageUrl cannot be empty");
+//			Preconditions.checkArgument(!Util.isNullOrEmpty(pageTitle), "pageTitle cannot be empty");
+//			Preconditions.checkArgument(!Util.isNullOrEmpty(referrer), "referrer cannot be empty");
+//			
+//			var payload:IPayload = new TrackerPayload();
+//			payload.add(Parameter.EVENT, Constants.EVENT_PAGE_VIEW);
+//			payload.add(Parameter.PAGE_URL, pageUrl);
+//			payload.add(Parameter.PAGE_TITLE, pageTitle);
+//			payload.add(Parameter.PAGE_REFR, referrer);
+//			
+//			completePayload(payload, context, timestamp);
+//			
+//			addTrackerPayload(payload);
+//		}
 				
 		/**
 		 * @param category Category of the event
