@@ -34,7 +34,7 @@ package
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
 			var subject:Subject = new Subject();
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
-			Assert.assertEquals(DevicePlatform.DESKTOP, tracker.getPlatform());
+			Assert.assertEquals(DevicePlatform.WEB, tracker.getPlatform());
 		}
 		
 		[Test]
