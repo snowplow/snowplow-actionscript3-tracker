@@ -32,18 +32,20 @@ package
 			"schema":"iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-0",
 			"data":[
 				{
-					"vp":"320x480",
-					"tv":"as3-0.1.0",
-					"p":"pc",
-					"url":"www.mypage.com",
-					"tna":"AF003",
-					"tz":"Etc/UTC-2:00",
-					"eid":"ec7585f8-50a0-4f74-b9eb-b10e9fc1f3b0",
-					"page":"My Page",
-					"e":"pv",
-					"refr":"www.me.com",
 					"aid":"cloudfront",
-					"co":"{\"schema\":\"iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0\",\"data\":[{\"schema\":\"iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1\",\"data\":{\"targetUrl\":\"http://www.google.com\"}},{\"schema\":\"iglu:com.snowplowanalytics.snowplow/flash_context/jsonschema/1-0-0\",\"data\":{\"hasLocalStorage\":true,\"stageSize\":{\"height\":893,\"width\":1131},\"version\":\"WIN 11,1,102,63\",\"isDebugger\":true,\"playerType\":\"ActiveX\",\"hasScriptAccess\":true}}]}","dtm":"1421582265712"
+					"co":"{\"schema\":\"iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0\",\"data\":[{\"schema\":\"iglu:com.snowplowanalytics.snowplow/flash_context/jsonschema/1-0-0\",\"data\":{\"hasLocalStorage\":true,\"stageSize\":{\"height\":893,\"width\":1131},\"version\":\"WIN 11,1,102,63\",\"isDebugger\":true,\"playerType\":\"ActiveX\",\"hasScriptAccess\":true}}]}",
+					"dtm":"1421582265712",
+					"e":"pv",
+					"eid":"ec7585f8-50a0-4f74-b9eb-b10e9fc1f3b0",
+					"p":"pc",
+					"page":"My Page",
+					"refr":"www.me.com",
+					"tna":"AF003",
+					"tv":"as3-0.1.0",
+					"tz":"Etc/UTC-2:00",
+					"ue_pr":"{\"schema\":\"iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1\",\"data\":{\"targetUrl\":\"http://www.google.com\"}}",
+					"url":"www.mypage.com",
+					"vp":"320x480"
 				}
 			]
 		};

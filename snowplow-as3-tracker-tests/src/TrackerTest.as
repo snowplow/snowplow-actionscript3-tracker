@@ -97,10 +97,11 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
 
 			var context:SchemaPayload = new SchemaPayload();
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			
 			var contextList:Array = [];
@@ -120,10 +121,11 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			
 			var contextList:Array = [];
@@ -143,10 +145,11 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			
 			var contextList:Array = [];
@@ -166,10 +169,11 @@ package
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			
 			var contextList:Array = [];
@@ -233,9 +237,10 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
-
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -258,9 +263,10 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
-
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -283,9 +289,10 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
-
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -308,9 +315,10 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
-
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -351,9 +359,10 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
-
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -372,9 +381,10 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
-
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -393,9 +403,10 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
-
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
@@ -414,9 +425,10 @@ package
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["targetUrl"] = "http://www.google.com";
-
-			context.setSchema("iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1");
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
 			context.setData(someContext);
 			var contextList:Array = [];
 			contextList.push(context);
