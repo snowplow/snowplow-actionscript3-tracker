@@ -13,6 +13,7 @@
 
 package com.snowplowanalytics.snowplow.tracker
 {
+	import com.adobe.net.URI;
 	import com.snowplowanalytics.snowplow.tracker.emitter.Emitter;
 	import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
 	import com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload;
@@ -42,6 +43,10 @@ package com.snowplowanalytics.snowplow.tracker
 		private var hasLocalStorage:Boolean;
 		private var hasScriptAccess:Boolean;
 		
+		private var pageUrl:String = "UNKNOWN";
+		private var pageTitle:String = "UNKNOWN";
+		private var referrer:String = "UNKNOWN";
+		
 		/**
 		 * @param emitter Emitter to which events will be sent
 		 * @param subject Subject to be tracked
@@ -51,30 +56,36 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param base64Encoded Whether JSONs in the payload should be base-64 encoded
 		 */
 		function Tracker(emitter:Emitter, namespace:String, appId:String, subject:Subject = null, stage:Stage = null, base64Encoded:Boolean = true) {
-				this.emitter = emitter;
-				this.appId = appId;
-				this.base64Encoded = base64Encoded;
-				this.namespace = namespace;
-				this.subject = subject;
-				this.trackerVersion = Version.TRACKER;
-				this.platform = DevicePlatform.WEB;
-				this.stage = stage;
-				
-				this.playerType = Capabilities.playerType;
-				this.playerVersion = Capabilities.version;
-				this.isDebugger = Capabilities.isDebugger;
-				
-				try 
-				{
-					SharedObject.getLocal("test");
-					this.hasLocalStorage = true;
-				} 
-				catch (e:Error)
-				{
-					this.hasLocalStorage = false;
-				}
-				this.hasScriptAccess = ExternalInterface.available;
+			this.emitter = emitter;
+			this.appId = appId;
+			this.base64Encoded = base64Encoded;
+			this.namespace = namespace;
+			this.subject = subject;
+			this.trackerVersion = Version.TRACKER;
+			this.platform = DevicePlatform.WEB;
+			this.stage = stage;
+			
+			this.playerType = Capabilities.playerType;
+			this.playerVersion = Capabilities.version;
+			this.isDebugger = Capabilities.isDebugger;
+			
+			try 
+			{
+				SharedObject.getLocal("test");
+				this.hasLocalStorage = true;
+			} 
+			catch (e:Error)
+			{
+				this.hasLocalStorage = false;
 			}
+			this.hasScriptAccess = ExternalInterface.available;
+			
+			if (this.hasScriptAccess) {
+				try { pageUrl = ExternalInterface.call("function getPageUrl() { return document.location.href; }"); } catch(e:Error) { pageUrl = "UNKNOWN"; }
+				try { pageTitle = ExternalInterface.call("function getPageTitle() { return document.title; }"); } catch(e:Error) { pageTitle = "UNKNOWN"; }
+				try { referrer = ExternalInterface.call("function getReferrer() { return document.referrer; }"); } catch(e:Error) { referrer = "UNKNOWN"; }
+			}				
+		}
 		
 		/**
 		 * @param payload Payload builder
@@ -91,6 +102,11 @@ package com.snowplowanalytics.snowplow.tracker
 				payload.add(Parameter.NAMESPACE, this.namespace);
 				payload.add(Parameter.TRACKER_VERSION, this.trackerVersion);
 				payload.add(Parameter.EID, Util.getEventId());
+				
+				//Add page data
+				payload.add(Parameter.PAGE_URL, pageUrl);
+				payload.add(Parameter.PAGE_TITLE, pageTitle);
+				payload.add(Parameter.PAGE_REFR, referrer);
 				
 				// If timestamp is set to 0, generate one
 				payload.add(Parameter.TIMESTAMP,
