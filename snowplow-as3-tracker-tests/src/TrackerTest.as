@@ -185,9 +185,133 @@ package
 		}		
 */		
 		[Test]
-		public function testTrackStructuredEvent():void {
+		public function testTrackStructuredEventGet():void {
+			/*var expected:Object = {
+				tv: Version.TRACKER,
+					tna: 'cf',
+					aid: 'cfe35',
+					e: 'se',
+					se_ca: 'clothes',
+					se_ac: 'add_to_basket',
+					se_la: undefined,
+					se_pr: 'red',			
+					se_va: '15'
+			};*/
 			
+			var e:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+			
+			var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, false);
+
+			var someContext:Object = {};
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			var context:SchemaPayload = new SchemaPayload();
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
+			context.setData(someContext);
+
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			t.trackStructuredEvent('clothes', 'add_to_basket', 'struct_label', 'red', 15, contextList);
 		}
+		
+		[Test]
+		public function testTrackStructuredEventPost():void {
+/*			var expected:Object = {
+				tv: Version.TRACKER,
+					tna: 'cf',
+					aid: 'cfe35',
+					e: 'se',
+					se_ca: 'clothes',
+					se_ac: 'add_to_basket',
+					se_la: undefined,
+					se_pr: 'red',			
+					se_va: '15'
+			};
+*/			
+			var e:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+
+			var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, false);
+			
+			var someContext:Object = {};
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			var context:SchemaPayload = new SchemaPayload();
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
+			context.setData(someContext);
+			
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			t.trackStructuredEvent('clothes', 'add_to_basket', 'struct_label', 'red', 15, contextList);
+		}
+
+		[Test]
+		public function testTrackStructuredEventGetBase64():void {
+			/*var expected:Object = {
+			tv: Version.TRACKER,
+			tna: 'cf',
+			aid: 'cfe35',
+			e: 'se',
+			se_ca: 'clothes',
+			se_ac: 'add_to_basket',
+			se_la: undefined,
+			se_pr: 'red',			
+			se_va: '15'
+			};*/
+			
+			var e:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+			
+			var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, true);
+			
+			var someContext:Object = {};
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			var context:SchemaPayload = new SchemaPayload();
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
+			context.setData(someContext);
+			
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			t.trackStructuredEvent('clothes', 'add_to_basket', 'struct_label', 'red', 15, contextList);
+		}
+		
+		[Test]
+		public function testTrackStructuredEventPostBase64():void {
+			/*			var expected:Object = {
+			tv: Version.TRACKER,
+			tna: 'cf',
+			aid: 'cfe35',
+			e: 'se',
+			se_ca: 'clothes',
+			se_ac: 'add_to_basket',
+			se_la: undefined,
+			se_pr: 'red',			
+			se_va: '15'
+			};
+			*/			
+			var e:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+			
+			var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, true);
+			
+			var someContext:Object = {};
+			someContext["latitude"] = 31.778013
+			someContext["longitude"] = 35.235379;
+			
+			var context:SchemaPayload = new SchemaPayload();
+			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
+			context.setData(someContext);
+			
+			var contextList:Array = [];
+			contextList.push(context);
+			
+			t.trackStructuredEvent('clothes', 'add_to_basket', 'struct_label', 'red', 15, contextList);
+		}
+
 		
 		[Test]
 		public function testTrackStructuredEvent1():void {
