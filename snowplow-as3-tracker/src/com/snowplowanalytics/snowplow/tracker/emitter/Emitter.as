@@ -41,7 +41,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		 * @param successCallback The callback function to handle success cases when sending events.
 		 * @param errorCallback The callback function to handle error cases when sending events.
 		 */
-		public function Emitter(uri:String, httpMethod:String = "get") {
+		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET) {
 			if (httpMethod == URLRequestMethod.GET) {
 				_uri = new URI("http://" + uri + "/i");
 			} else { // POST
