@@ -27,6 +27,8 @@
     <classEntry path="com.snowplowanalytics.snowplow.tracker.util.Preconditions"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.util.UUID"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.event.EmitterEvent"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.util.LocalStorage"/>
+    <classEntry path="de.aggro.utils.CookieUtil"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

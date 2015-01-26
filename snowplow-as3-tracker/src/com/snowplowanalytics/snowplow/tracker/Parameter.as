@@ -35,10 +35,19 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const PLATFORM:String = "p";
 		public static const RESOLUTION:String = "res";
 		public static const VIEWPORT:String = "vp";
+		public static const DOCUMENT_SIZE:String = "ds";
+		public static const VISIT_COUNT:String = "vid";
+		public static const DOMAIN_USER_ID:String = "duid";
+		public static const USER_FINGERPRINT:String = "fp";
 		public static const COLOR_DEPTH:String = "cd";
 		public static const TIMEZONE:String = "tz";
 		public static const LANGUAGE:String = "lang";
-		
+
+		//Flash specific subject
+		public static const SHARED_OBJECT_VISIT_COUNT:String = "so_vid";
+		public static const SHARED_OBJECT_DOMAIN_USER_ID:String = "so_duid";
+		public static const SHARED_OBJECT_USER_FINGERPRINT:String = "so_fp";
+
 		// Page View
 		public static const PAGE_URL:String = "url";
 		public static const PAGE_TITLE:String = "page";

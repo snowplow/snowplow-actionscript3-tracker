@@ -17,8 +17,9 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
-    <application path="FlexUnitCompilerApplication.mxml"/>
+    <application path="TestExternalInterface.mxml"/>
     <application path="FlexUnitApplication.mxml"/>
+    <application path="FlexUnitCompilerApplication.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>

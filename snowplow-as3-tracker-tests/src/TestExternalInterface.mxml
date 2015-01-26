@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   minWidth="955" 
+			   minHeight="600"
+			   creationComplete="onCreationComplete()">
+	<fx:Script>
+		<![CDATA[
+			import com.snowplowanalytics.snowplow.tracker.Tracker;
+			import com.snowplowanalytics.snowplow.tracker.emitter.Emitter;
+			import com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload;
+			
+			import mx.core.FlexGlobals;
+			private function onCreationComplete():void
+			{
+				var e:Emitter = new Emitter("astracker.snplow.com", URLRequestMethod.POST);
+				
+				var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, true);
+				
+				var someContext:Object = {};
+				someContext["latitude"] = 31.778013
+				someContext["longitude"] = 35.235379;
+				
+				var context:SchemaPayload = new SchemaPayload();
+				context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
+				context.setData(someContext);
+				
+				var contextList:Array = [];
+				contextList.push(context);
+				
+				t.trackStructuredEvent('clothes', 'add_to_basket', 'struct_label', 'red', 15, contextList);
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+</s:Application>

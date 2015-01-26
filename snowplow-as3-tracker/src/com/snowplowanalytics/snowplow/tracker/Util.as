@@ -18,12 +18,13 @@ package com.snowplowanalytics.snowplow.tracker
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
+	import flash.external.ExternalInterface;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.utils.ByteArray;
-
+	
 	import mx.utils.Base64Encoder;
 
 	public class Util
@@ -189,6 +190,226 @@ package com.snowplowanalytics.snowplow.tracker
 		public static function clearArray (a:Array):void
 		{
 			a.splice(0, a.length);
+		}
+		
+		public static function findFirstItemInArray (array:Array, prop:String, val:*):*
+		{
+			for each(var item:* in array)
+			{
+				if (item[prop] == val)
+				{
+					return item;
+				}
+			}
+			
+			return null;
+		}
+		
+		/**
+		* Return value from name-value pair in querystring 
+		*/
+		private static function fromQuerystring(field:String, url:String):String {
+			var match:RegExp = new RegExp('^[^#]*[?&]' + field + '=([^&#]*)').exec(url);
+			if (!match) {
+				return null;
+			}
+			return decodeURIComponent(match[1].replace(/\+/g, ' '));
+		};
+		
+		/**
+		* Extract parameter from URL
+		*/
+		private static function getParameter(url:String, name:String):String {
+			// scheme : // [username [: password] @] hostname [: port] [/ [path] [? query] [# fragment]]
+			var e:RegExp = new RegExp('^(?:https?|ftp)(?::/*(?:[^?]+))([?][^#]+)');
+			var	matches:* = e.exec(url);
+			var	result:String = fromQuerystring(name, matches[1]);
+			
+			return result;
+		}
+		
+		/**
+		* Extract hostname from URL
+		*/
+		private static function getHostName(url:String):String {
+			// scheme : // [username [: password] @] hostname [: port] [/ [path] [? query] [# fragment]]
+			var e:RegExp = new RegExp('^(?:(?:https?|ftp):)/*(?:[^@]+@)?([^:/#]+)');
+			var	matches:* = e.exec(url);
+			
+			return matches ? matches[1] : url;
+		};
+		
+		/**
+		* Test whether a string is an IP address
+		*/
+		private static function isIpAddress(str:String):Boolean {
+			var IPRegExp:RegExp = new RegExp('^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$');
+			return IPRegExp.test(str);
+		}
+		
+		/**
+		* If the hostname is an IP address, look for text indicating
+		* that the page is cached by Yahoo
+		*/
+		private static function isYahooCachedPage(hostName:String):Boolean 
+		{
+			return false;
+			var	initialDivText:String;
+			var cachedIndicator:String;
+			
+			if (isIpAddress(hostName)) {
+				try {
+					initialDivText = ExternalInterface.call("function getInitialDivText() { return document.body.children[0].children[0].children[0].children[0].children[0].children[0].innerHTML; }");
+					cachedIndicator = 'You have reached the cached page for';
+					return initialDivText.slice(0, cachedIndicator.length) === cachedIndicator;
+				} catch (e:Error) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		/**
+		* Fix-up domain
+		*/
+		public static function fixupDomain(domain:String):String {
+			var dl:int = domain.length;
+			
+			// remove trailing '.'
+			if (domain.charAt(--dl) === '.') {
+				domain = domain.slice(0, dl);
+			}
+			// remove leading '*'
+			if (domain.slice(0, 2) === '*.') {
+				domain = domain.slice(1);
+			}
+			return domain;
+		};
+		
+		/**
+		 * Fix-up URL when page rendered from search engine cache or translated page.
+		 * TODO: it would be nice to generalise this and/or move into the ETL phase.
+		 */
+		public static function fixupUrl(hostName:String, href:String, referrer:String):Array {
+			
+			if (hostName === 'translate.googleusercontent.com') {       // Google
+				if (referrer === '') {
+					referrer = href;
+				}
+				href = getParameter(href, 'u');
+				hostName = getHostName(href);
+			} else if (hostName === 'cc.bingj.com' ||                   // Bing
+		  			   hostName === 'webcache.googleusercontent.com' ||            // Google
+				       isYahooCachedPage(hostName)) {                         // Yahoo (via Inktomi 74.6.0.0/16)
+				try {
+					href = ExternalInterface.call("function getLinkHref() { return document.links[0].href; }");
+				} catch (e:Error) {
+					href = '';
+				}
+				hostName = getHostName(href);
+			}
+			return [hostName, href, referrer];
+		};
+		
+		public static var scriptAccessAllowed:int = -1; //-1 = not set. 0 = false. 1 = true.
+		
+		public static function isScriptAccessAllowed ():Boolean
+		{
+			if (scriptAccessAllowed != -1)
+			{
+				return scriptAccessAllowed == 1;
+			}
+			
+			if (!ExternalInterface.available)
+			{
+				scriptAccessAllowed = 0;
+				return false;
+			}
+			
+			try
+			{
+				ExternalInterface.call("function isScriptAccessAllowed(){return true;}");
+				scriptAccessAllowed = 1;
+			}
+			catch (error:Error)
+			{
+				if (error is SecurityError)
+				{
+					scriptAccessAllowed = 0;
+				}
+			}
+			
+			return scriptAccessAllowed == 1;
+		}
+		
+		
+		/**
+		 * AS Implementation of MurmurHash3 
+		 * 
+		 * @param {string} key ASCII only
+		 * @param {number} seed Positive integer only
+		 * @return {number} 32-bit positive integer hash 
+		 */
+		public static function murmurhash3_32_gc(key:String, seed:Number):Number {
+			var remainder:Number;
+			var bytes:Number;
+			var h1:Number;
+			var h1b:Number;
+			var c1:Number;
+			var c1b:Number;
+			var c2:Number;
+			var c2b:Number;
+			var k1:Number;
+			var i:Number;
+			
+			remainder = key.length & 3; // key.length % 4
+			bytes = key.length - remainder;
+			h1 = seed;
+			c1 = 0xcc9e2d51;
+			c2 = 0x1b873593;
+			i = 0;
+			
+			while (i < bytes) {
+				k1 = 
+					((key.charCodeAt(i) & 0xff)) |
+					((key.charCodeAt(++i) & 0xff) << 8) |
+					((key.charCodeAt(++i) & 0xff) << 16) |
+					((key.charCodeAt(++i) & 0xff) << 24);
+				++i;
+				
+				k1 = ((((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16))) & 0xffffffff;
+				k1 = (k1 << 15) | (k1 >>> 17);
+				k1 = ((((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16))) & 0xffffffff;
+				
+				h1 ^= k1;
+				h1 = (h1 << 13) | (h1 >>> 19);
+				h1b = ((((h1 & 0xffff) * 5) + ((((h1 >>> 16) * 5) & 0xffff) << 16))) & 0xffffffff;
+				h1 = (((h1b & 0xffff) + 0x6b64) + ((((h1b >>> 16) + 0xe654) & 0xffff) << 16));
+			}
+			
+			k1 = 0;
+			
+			switch (remainder) {
+				case 3: k1 ^= (key.charCodeAt(i + 2) & 0xff) << 16;
+				case 2: k1 ^= (key.charCodeAt(i + 1) & 0xff) << 8;
+				case 1: k1 ^= (key.charCodeAt(i) & 0xff);
+					
+					k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16)) & 0xffffffff;
+					k1 = (k1 << 15) | (k1 >>> 17);
+					k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16)) & 0xffffffff;
+					h1 ^= k1;
+			}
+			
+			h1 ^= key.length;
+			
+			h1 ^= h1 >>> 16;
+			h1 = (((h1 & 0xffff) * 0x85ebca6b) + ((((h1 >>> 16) * 0x85ebca6b) & 0xffff) << 16)) & 0xffffffff;
+			h1 ^= h1 >>> 13;
+			h1 = ((((h1 & 0xffff) * 0xc2b2ae35) + ((((h1 >>> 16) * 0xc2b2ae35) & 0xffff) << 16))) & 0xffffffff;
+			h1 ^= h1 >>> 16;
+			
+			return h1 >>> 0;
 		}
 	}
 }
