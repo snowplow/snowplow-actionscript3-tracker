@@ -44,9 +44,9 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const LANGUAGE:String = "lang";
 
 		//Flash specific subject
-		public static const SHARED_OBJECT_VISIT_COUNT:String = "so_vid";
-		public static const SHARED_OBJECT_DOMAIN_USER_ID:String = "so_duid";
-		public static const SHARED_OBJECT_USER_FINGERPRINT:String = "so_fp";
+		public static const SHARED_OBJECT_VISIT_COUNT:String = "domainSessionIndex";
+		public static const SHARED_OBJECT_DOMAIN_USER_ID:String = "domainUserId";
+		public static const SHARED_OBJECT_USER_FINGERPRINT:String = "userFingerprint";
 
 		// Page View
 		public static const PAGE_URL:String = "url";

@@ -280,8 +280,6 @@ package com.snowplowanalytics.snowplow.tracker
 										   context:Array,
 										   timestamp:Number):IPayload {
 			
-				addBrowserData(payload);
-			
 				payload.add(Parameter.PLATFORM, this.platform);
 				payload.add(Parameter.APPID, this.appId);
 				payload.add(Parameter.NAMESPACE, this.namespace);
@@ -315,6 +313,8 @@ package com.snowplowanalytics.snowplow.tracker
 				var flashPayload:SchemaPayload = new SchemaPayload();
 				flashPayload.setSchema(Constants.SCHEMA_FLASH);
 				flashPayload.setData(flashData.getMap());
+
+				addBrowserData(payload, flashPayload);
 				
 				context.push(flashPayload);
 				
@@ -790,7 +790,7 @@ package com.snowplowanalytics.snowplow.tracker
 		* (resolution, url, referrer, etc.)
 		* Also sets the required storage.
 		*/
-		public function addBrowserData(payload:IPayload):void {
+		public function addBrowserData(payload:IPayload, flashPayload:IPayload):void {
 			var nowTs:String = Math.round(new Date().getTime() / 1000).toString();
 			var	idname:String = getSnowplowCookieName('id');
 			var	sesname:String = getSnowplowCookieName('ses');
@@ -828,10 +828,9 @@ package com.snowplowanalytics.snowplow.tracker
 			payload.add(Parameter.USER_FINGERPRINT, cookieUserFingerprint);
 			payload.add(Parameter.UID, businessUserId);
 			
-			
-			payload.add(Parameter.SHARED_OBJECT_VISIT_COUNT, sharedObjectVisitCount);
-			payload.add(Parameter.SHARED_OBJECT_DOMAIN_USER_ID, sharedObjectDomainUserId); // Set to our local variable
-			payload.add(Parameter.SHARED_OBJECT_USER_FINGERPRINT, sharedObjectUserFingerprint);
+			flashPayload.add(Parameter.SHARED_OBJECT_VISIT_COUNT, sharedObjectVisitCount);
+			flashPayload.add(Parameter.SHARED_OBJECT_DOMAIN_USER_ID, sharedObjectDomainUserId); // Set to our local variable
+			flashPayload.add(Parameter.SHARED_OBJECT_USER_FINGERPRINT, sharedObjectUserFingerprint);
 			
 			// Update storage
 			setDomainUserIdSharedObject(sharedObjectDomainUserId, sharedObjectCreateTs, sharedObjectVisitCount.toString(), nowTs, sharedObjectLastVisitTs);
