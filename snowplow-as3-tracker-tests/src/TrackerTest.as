@@ -72,7 +72,6 @@ package
 			
 		}
 
-		/*
 		[Test]
 		public function testTrackPageView():void {
 			
@@ -183,7 +182,7 @@ package
 			
 			emitter.flushBuffer();
 		}		
-*/		
+	
 		[Test]
 		public function testTrackStructuredEventGet():void {
 			/*var expected:Object = {
