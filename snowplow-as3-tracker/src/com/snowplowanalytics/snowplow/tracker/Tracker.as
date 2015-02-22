@@ -380,6 +380,14 @@ package com.snowplowanalytics.snowplow.tracker
 			return this.subject;
 		}
 		
+		public function getCookieUserFingerprint():Number {
+			return cookieUserFingerprint;
+		}
+		
+		public function getSharedObjectUserFingerprint():Number {
+			return sharedObjectUserFingerprint;
+		}
+		
 		/**
 		* Update domain hash
 		*/
@@ -852,6 +860,8 @@ package com.snowplowanalytics.snowplow.tracker
 		 */
 		public function trackPageView(pageUrl:String, pageTitle:String, referrer:String, context:Array = null, timestamp:Number = 0):void 
 		{
+			if (context == null) context = [];
+
 			// Precondition checks
 			Preconditions.checkNotNull(pageUrl);
 			Preconditions.checkArgument(!Util.isNullOrEmpty(pageUrl), "pageUrl cannot be empty");
@@ -886,6 +896,8 @@ package com.snowplowanalytics.snowplow.tracker
 			context:Array = null, 
 			timestamp:Number = 0):void
 		{
+			if (context == null) context = [];
+
 			// Precondition checks
 			Preconditions.checkNotNull(label);
 			Preconditions.checkNotNull(property);
@@ -918,6 +930,8 @@ package com.snowplowanalytics.snowplow.tracker
 		public function trackUnstructuredEvent(eventData:SchemaPayload, context:Array = null,
 			timestamp:Number = 0):void 
 		{
+			if (context == null) context = [];
+
 			var envelope:SchemaPayload = new SchemaPayload();
 			envelope.setSchema(Constants.SCHEMA_UNSTRUCT_EVENT);
 			envelope.setData(eventData.getMap());
@@ -994,6 +1008,8 @@ package com.snowplowanalytics.snowplow.tracker
 			items:Array, context:Array = null,
 			timestamp:Number = 0):void 
 		{
+			if (context == null) context = [];
+
 			// Precondition checks
 			Preconditions.checkNotNull(affiliation);
 			Preconditions.checkNotNull(city);

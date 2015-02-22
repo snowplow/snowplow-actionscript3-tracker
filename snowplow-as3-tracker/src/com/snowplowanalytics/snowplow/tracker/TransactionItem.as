@@ -18,6 +18,8 @@ package com.snowplowanalytics.snowplow.tracker
 		public function TransactionItem(order_id:String, sku:String, price:Number, quantity:int, name:String,
 										category:String, currency:String, context:Array = null)
 		{
+			if (context == null) context = [];
+
 			put(Parameter.EVENT, "ti");
 			put(Parameter.TI_ITEM_ID, order_id);
 			put(Parameter.TI_ITEM_SKU, sku);
