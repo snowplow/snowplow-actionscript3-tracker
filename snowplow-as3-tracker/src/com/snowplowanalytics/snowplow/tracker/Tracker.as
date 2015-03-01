@@ -833,7 +833,7 @@ package com.snowplowanalytics.snowplow.tracker
 			payload.add(Parameter.DOCUMENT_SIZE, detectDocumentSize());
 			payload.add(Parameter.VISIT_COUNT, cookieVisitCount.toString());
 			payload.add(Parameter.DOMAIN_USER_ID, cookieDomainUserId); // Set to our local variable
-			payload.add(Parameter.USER_FINGERPRINT, cookieUserFingerprint);
+			payload.add(Parameter.USER_FINGERPRINT, cookieUserFingerprint.toString());
 			payload.add(Parameter.UID, businessUserId);
 			
 			flashPayload.add(Parameter.SHARED_OBJECT_VISIT_COUNT, sharedObjectVisitCount);
