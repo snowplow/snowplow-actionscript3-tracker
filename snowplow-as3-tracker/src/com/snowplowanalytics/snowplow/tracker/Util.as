@@ -175,7 +175,17 @@ package com.snowplowanalytics.snowplow.tracker
 			try {
 				var encoder:Base64Encoder = new Base64Encoder();
 				encoder.encode(str);
-				return encoder.flush();
+				var base64:String = encoder.flush();
+				
+				//make base64 url safe.
+				base64 = base64.replace(/\+/g, "-");
+				base64 = base64.replace(/\//g, "_");
+				base64 = base64.replace(/=/g, "");
+				base64 = base64.replace(/\n/g, "");
+				base64 = base64.replace(/\r/g, "");
+				base64 = base64.replace(/\t/g, "");
+				
+				return base64;
 			} catch (e:Error) {
 				trace(e.getStackTrace());
 			}
