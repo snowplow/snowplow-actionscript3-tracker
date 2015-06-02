@@ -38,14 +38,14 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		 * Create an Emitter instance with a collector URL and HttpMethod to send requests.
 		 * @param URI The collector URL. Don't include "http://" - this is done automatically.
 		 * @param httpMethod The HTTP request method. If GET, <code>BufferOption</code> is set to <code>Instant</code>.
-		 * @param successCallback The callback function to handle success cases when sending events.
-		 * @param errorCallback The callback function to handle error cases when sending events.
+		 * @param protocol The protocol for the call. Either http or https. Defaults to https.
 		 */
-		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET) {
+		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, protocol:String = "https") {
+			
 			if (httpMethod == URLRequestMethod.GET) {
-				_uri = new URI("http://" + uri + "/i");
+				_uri = new URI(protocol + "://" + uri + "/i");
 			} else { // POST
-				_uri = new URI("http://" + uri + "/" + Constants.PROTOCOL_VENDOR + "/" + Constants.PROTOCOL_VERSION);
+				_uri = new URI(protocol + "://" + uri + "/" + Constants.PROTOCOL_VENDOR + "/" + Constants.PROTOCOL_VERSION);
 			}
 			
 			this.httpMethod = httpMethod;
