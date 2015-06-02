@@ -91,10 +91,13 @@ package
 			payload.addMap(foo, true, "cx", "co");
 			
 			var res1:String = "{\"cx\":\"eyJteUtleSI6Im15IFZhbHVlIiwibWVoaCI6WyJzb21lYmFyIiwic29tZWJhcjIiXX0=\"}";
-			var res2:String = "{\"cx\":\"eyJtZWhoIjpbInNvbWViYXIiLCJzb21lYmFyMiJdLCJteUtleSI6Im15IFZhbHVlIn0=\"}";
+			var res2:String = "{\"cx\":\"eyJteUtleSI6Im15IFZhbHVlIiwibWVoaCI6WyJzb21lYmFyIiwic29tZWJhcjIiXX0\"}";
+			var res3:String = "{\"cx\":\"eyJtZWhoIjpbInNvbWViYXIiLCJzb21lYmFyMiJdLCJteUtleSI6Im15IFZhbHVlIn0=\"}";
+			var res4:String = "{\"cx\":\"eyJtZWhoIjpbInNvbWViYXIiLCJzb21lYmFyMiJdLCJteUtleSI6Im15IFZhbHVlIn0\"}";
+			
 			var payloadString:String = payload.toString();
 			
-			Assert.assertTrue(payloadString == res1 || payloadString == res2);
+			Assert.assertTrue(payloadString == res1 || payloadString == res2 || payloadString == res3 || payloadString == res4);
 		}
 		
 		[Test]
