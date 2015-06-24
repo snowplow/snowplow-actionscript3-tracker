@@ -831,7 +831,7 @@ package com.snowplowanalytics.snowplow.tracker
 			// Build out the rest of the request
 			payload.add(Parameter.VIEWPORT, detectViewport());
 			payload.add(Parameter.DOCUMENT_SIZE, detectDocumentSize());
-			payload.add(Parameter.VISIT_COUNT, cookieVisitCount.toString());
+			payload.add(Parameter.VISIT_COUNT, isNaN(cookieVisitCount) ? 0 :  cookieVisitCount.toString());
 			payload.add(Parameter.DOMAIN_USER_ID, cookieDomainUserId); // Set to our local variable
 			payload.add(Parameter.USER_FINGERPRINT, cookieUserFingerprint.toString());
 			payload.add(Parameter.UID, businessUserId);
