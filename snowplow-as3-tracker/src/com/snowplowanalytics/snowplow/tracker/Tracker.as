@@ -307,7 +307,15 @@ package com.snowplowanalytics.snowplow.tracker
 				flashData.add(Parameter.FLASH_HAS_LOCAL_STORAGE, hasLocalStorage);
 				flashData.add(Parameter.FLASH_HAS_SCRIPT_ACCESS, hasScriptAccess);
 				if (stage != null) {
-					flashData.add(Parameter.FLASH_STAGE_SIZE, { "width": stage.stageWidth, "height": stage.stageHeight});	
+					try
+					{
+						flashData.add(Parameter.FLASH_STAGE_SIZE, { "width": stage.stageWidth, "height": stage.stageHeight});	
+					}
+					catch (e:Error)
+					{
+						flashData.add(Parameter.FLASH_STAGE_SIZE, { "width": -1, "height": -1});
+						trace("Snowplow Tracker: We do not control the stage, so tracking stage size -1, -1");
+					}
 				}				
 
 				var flashPayload:SchemaPayload = new SchemaPayload();
