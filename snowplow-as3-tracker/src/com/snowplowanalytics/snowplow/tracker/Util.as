@@ -284,15 +284,17 @@ package com.snowplowanalytics.snowplow.tracker
 		* Fix-up domain
 		*/
 		public static function fixupDomain(domain:String):String {
-			var dl:int = domain.length;
-			
-			// remove trailing '.'
-			if (domain.charAt(--dl) === '.') {
-				domain = domain.slice(0, dl);
-			}
-			// remove leading '*'
-			if (domain.slice(0, 2) === '*.') {
-				domain = domain.slice(1);
+			if (domain != null){
+				var dl:int = domain.length;
+				
+				// remove trailing '.'
+				if (domain.charAt(--dl) === '.') {
+					domain = domain.slice(0, dl);
+				}
+				// remove leading '*'
+				if (domain.slice(0, 2) === '*.') {
+					domain = domain.slice(1);
+				}
 			}
 			return domain;
 		};

@@ -109,6 +109,24 @@ package com.snowplowanalytics.snowplow.tracker
 			}
 			this.hasScriptAccess = Util.isScriptAccessAllowed();
 			
+			var defaultJavascriptInfo:Object = {
+				cd: Capabilities.screenColor
+				, cookie: '0'
+				, domain: ""
+				, gears: null
+				, hasLocalStorage: false
+				, hasSessionStorage: false
+				, javaEnabled: null
+				, mimeTypes: null
+				, pageUrl: null
+				, platform: Capabilities.os
+				, plugins: null
+				, res: Capabilities.screenResolutionX + 'x' + Capabilities.screenResolutionY
+				, title: null
+				, userAgent: null
+				, referrer: null
+			};
+			
 			if (this.hasScriptAccess) {
 	
 				var javascriptInfoScript:String = "function getJavascriptInfo() {\n " +
@@ -195,7 +213,7 @@ package com.snowplowanalytics.snowplow.tracker
 				
 				try { javascriptInfo = ExternalInterface.call(javascriptInfoScript); }
 				catch(e:Error) { 
-					javascriptInfo = {}; 
+					javascriptInfo = defaultJavascriptInfo; 
 				}								
 				
 				var fromQuerystringMethod:String = "function fromQuerystring (field, url) {\n" +
@@ -233,8 +251,16 @@ package com.snowplowanalytics.snowplow.tracker
 					"}\n" +
 					"return referrer; }";
 				
-				try { javascriptInfo.referrer = ExternalInterface.call(getReferrerMethod); } 
-				catch(e:Error) { javascriptInfo.referrer = null; }
+				if (javascriptInfo == null){
+					javascriptInfo = defaultJavascriptInfo;
+				}
+				
+				try { 
+					javascriptInfo.referrer = ExternalInterface.call(getReferrerMethod);
+				} 
+				catch(e:Error){
+					javascriptInfo.referrer = null; 
+				}
 				
 				var locationArray:Array = Util.fixupUrl(javascriptInfo.domain, javascriptInfo.pageUrl, javascriptInfo.referrer);
 				javascriptInfo.domain = Util.fixupDomain(locationArray[0]);
@@ -245,23 +271,7 @@ package com.snowplowanalytics.snowplow.tracker
 				
 				cookieUserFingerprint = detectJavascriptSignature(configUserFingerprintHashSeed);
 			} else { //we can not get javascript info since we have no script access
-				javascriptInfo = {
-				  	  cd: Capabilities.screenColor
-					, cookie: '0'
-					, domain: ""
-					, gears: null
-					, hasLocalStorage: false
-					, hasSessionStorage: false
-					, javaEnabled: null
-					, mimeTypes: null
-					, pageUrl: null
-					, platform: Capabilities.os
-					, plugins: null
-					, res: Capabilities.screenResolutionX + 'x' + Capabilities.screenResolutionY
-					, title: null
-					, userAgent: null
-					, referrer: null
-				};
+				javascriptInfo = defaultJavascriptInfo;
 				cookieUserFingerprint = NaN;
 			}
 			
