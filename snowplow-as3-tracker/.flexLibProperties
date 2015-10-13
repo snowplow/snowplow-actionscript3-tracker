@@ -29,6 +29,7 @@
     <classEntry path="com.snowplowanalytics.snowplow.tracker.event.EmitterEvent"/>
     <classEntry path="com.snowplowanalytics.snowplow.tracker.util.LocalStorage"/>
     <classEntry path="de.aggro.utils.CookieUtil"/>
+    <classEntry path="com.snowplowanalytics.snowplow.tracker.util.Base64"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
