@@ -1,10 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testrun name="" >
 <testsuite  name="Default Test Suite" project="snowplow-as3-tracker-tests">
-<testsuite name="TrackerTest" type="testsuiteclass"/>
-<testsuite name="SubjectTest" type="testsuiteclass"/>
-<testsuite name="TrackerPayloadTest" type="testsuiteclass"/>
-<testsuite name="EmitterTest" type="testsuiteclass"/>
-<testsuite name="UtilTest" type="testsuiteclass"/>
+<testsuite name="TrackerPayloadTest" type="testcaseclass">
+<testcase name="testGetMap" classname="TrackerPayloadTest"/>
+<testcase name="testAddString" classname="TrackerPayloadTest"/>
+<testcase name="testSetSchema" classname="TrackerPayloadTest"/>
+<testcase name="testAddObject" classname="TrackerPayloadTest"/>
+<testcase name="testSetData" classname="TrackerPayloadTest"/>
+<testcase name="testAddMap" classname="TrackerPayloadTest"/>
+<testcase name="testAddMapNotEncoding" classname="TrackerPayloadTest"/>
+<testcase name="testAddMapEncoding" classname="TrackerPayloadTest"/>
+</testsuite>
+<testsuite name="SubjectTest" type="testcaseclass">
+<testcase name="testGetSubject" classname="SubjectTest"/>
+<testcase name="testSetViewPort" classname="SubjectTest"/>
+<testcase name="testSetColorDepth" classname="SubjectTest"/>
+<testcase name="testSetScreenResolution" classname="SubjectTest"/>
+<testcase name="testSetTimezone2" classname="SubjectTest"/>
+<testcase name="testSetLanguage" classname="SubjectTest"/>
+<testcase name="testSetUserId" classname="SubjectTest"/>
+</testsuite>
+<testsuite name="TrackerTest" type="testcaseclass">
+<testcase name="testTrackStructuredEvent2" classname="TrackerTest"/>
+<testcase name="testTrackPageViewPost" classname="TrackerTest"/>
+<testcase name="testSetSchema" classname="TrackerTest"/>
+<testcase name="testTrackPageViewPostBase64" classname="TrackerTest"/>
+<testcase name="testTrackScreenViewPost" classname="TrackerTest"/>
+<testcase name="testTrackPageViewGet" classname="TrackerTest"/>
+<testcase name="testTrackScreenViewPostBase64" classname="TrackerTest"/>
+<testcase name="testTrackPageViewGetBase64" classname="TrackerTest"/>
+<testcase name="testTrackScreenViewGet" classname="TrackerTest"/>
+<testcase name="testTrackStructuredEventGet" classname="TrackerTest"/>
+<testcase name="testTrackScreenViewGetBase64" classname="TrackerTest"/>
+<testcase name="testTrackStructuredEventPost" classname="TrackerTest"/>
+<testcase name="testTrackEcommerceTransaction3" classname="TrackerTest"/>
+<testcase name="testTrackStructuredEventGetBase64" classname="TrackerTest"/>
+<testcase name="testTrackScreenView2" classname="TrackerTest"/>
+<testcase name="testTrackStructuredEventPostBase64" classname="TrackerTest"/>
+<testcase name="testTrackScreenView3" classname="TrackerTest"/>
+<testcase name="testTrackScreenView1" classname="TrackerTest"/>
+<testcase name="testTrackEcommerceTransaction2" classname="TrackerTest"/>
+<testcase name="testTrackStructuredEvent3" classname="TrackerTest"/>
+<testcase name="testTrackStructuredEvent1" classname="TrackerTest"/>
+<testcase name="testTrackUnstructuredEvent" classname="TrackerTest"/>
+<testcase name="testTrackUnstructuredEvent1" classname="TrackerTest"/>
+<testcase name="testTrackUnstructuredEvent2" classname="TrackerTest"/>
+<testcase name="testTrackUnstructuredEvent3" classname="TrackerTest"/>
+<testcase name="testDefaultPlatform" classname="TrackerTest"/>
+<testcase name="testTrackEcommerceTransactionItem" classname="TrackerTest"/>
+<testcase name="testSetPlatform" classname="TrackerTest"/>
+<testcase name="testTrackEcommerceTransactionPost" classname="TrackerTest"/>
+<testcase name="testSetSubject" classname="TrackerTest"/>
+<testcase name="testTrackEcommerceTransactionPostBase64" classname="TrackerTest"/>
+<testcase name="testTrackEcommerceTransactionGet" classname="TrackerTest"/>
+<testcase name="testTrackPageView" classname="TrackerTest"/>
+<testcase name="testTrackEcommerceTransactionGetBase64" classname="TrackerTest"/>
+<testcase name="testTrackPageView1" classname="TrackerTest"/>
+<testcase name="testTrackEcommerceTransaction1" classname="TrackerTest"/>
+<testcase name="testTrackPageView2" classname="TrackerTest"/>
+</testsuite>
+<testsuite name="EmitterTest" type="testcaseclass">
+<testcase name="testEmitterConstructor2" classname="EmitterTest"/>
+<testcase name="testBufferOption" classname="EmitterTest"/>
+<testcase name="testFlushBuffer" classname="EmitterTest"/>
+<testcase name="testFlushPost" classname="EmitterTest"/>
+<testcase name="testMaxBuffer" classname="EmitterTest"/>
+<testcase name="testFlushGet" classname="EmitterTest"/>
+<testcase name="testEmitterConstructor" classname="EmitterTest"/>
+</testsuite>
+<testsuite name="UtilTest" type="testcaseclass">
+<testcase name="testMapToJsonNode2" classname="UtilTest"/>
+<testcase name="testMapToJsonNode" classname="UtilTest"/>
+<testcase name="testBase64EncodeUnicode" classname="UtilTest"/>
+<testcase name="testGetTransactionId" classname="UtilTest"/>
+<testcase name="testGetTimestamp" classname="UtilTest"/>
+</testsuite>
 </testsuite>
 </testrun>
