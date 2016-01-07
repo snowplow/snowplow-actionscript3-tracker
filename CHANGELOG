@@ -1,3 +1,12 @@
-Version 0.2.0 (2015-10-13)
+Version 0.2.0 (2016-01-07)
 --------------------------
-Fixes bug in base64 encoder used by the json encoder wherein UTF characters were being corrupted.
+Added ability to choose HTTP protocol for Emitter (#33)
+Fixed bug that allows NaN to be sent for VISIT_COUNT ("vid") on payloads (#31)
+Fixed bug in base64 encoder used by the json encoder wherein UTF characters were being corrupted (#27)
+Now using try catch to handle case where we do not control the stage, and querying stage's properties will cause a run time error (#30)
+Fixed null object errors (#29)
+Fixed bug where the vid parameter was being set to an integer when cookies are disabled (#28)
+
+Version 0.1.0 (2015-03-23)
+--------------------------
+Initial release
