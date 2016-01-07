@@ -13,6 +13,7 @@
 
 package com.snowplowanalytics.snowplow.tracker
 {
+	import com.snowplowanalytics.snowplow.tracker.util.Base64;
 	import com.snowplowanalytics.snowplow.tracker.util.UUID;
 	
 	import flash.events.Event;
@@ -25,8 +26,6 @@ package com.snowplowanalytics.snowplow.tracker
 	import flash.net.URLRequestMethod;
 	import flash.utils.ByteArray;
 	
-	import mx.utils.Base64Encoder;
-
 	public class Util
 	{
 		public static function isNullOrEmpty(str:*):Boolean
@@ -173,9 +172,9 @@ package com.snowplowanalytics.snowplow.tracker
 		*/
 		public static function base64Encode(str:String):String {
 			try {
-				var encoder:Base64Encoder = new Base64Encoder();
-				encoder.encode(str);
-				var base64:String = encoder.flush();
+				var bytes:ByteArray = new ByteArray();
+				bytes.writeUTFBytes(str);
+				var base64:String = Base64.encode(bytes);
 				
 				//make base64 url safe.
 				base64 = base64.replace(/\+/g, "-");

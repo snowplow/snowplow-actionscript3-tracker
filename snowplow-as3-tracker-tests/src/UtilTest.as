@@ -30,6 +30,26 @@ package
 			Assert.assertNotNull(Util.getTransactionId());
 		}
 		
+
+		[Test]
+		public function testBase64EncodeUnicode():void {
+			var str:String = "Bobby\u1920s Story";
+			
+			var base64:String = Util.base64Encode(str);
+			
+			Assert.assertEquals("Qm9iYnnhpKBzIFN0b3J5", base64);
+		}
+		
+		[Test]
+		public function testJsonEncodeUnicodeNode():void {
+			var map:Object = {};
+			map["title"] = "Bobby\u1920s Story";
+			
+			var node:String = JSON.encode(map);
+			
+			Assert.assertEquals("{\"title\":\"Bobby\u0019s Story\"}", node);
+		}
+		
 		[Test]
 		public function testMapToJsonNode():void {
 			var map:Object = {};

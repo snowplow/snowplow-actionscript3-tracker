@@ -5,19 +5,85 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" xmlns:flexui="flexunit.flexui.*" creationComplete="onCreationComplete()">
-	
 	<fx:Script>
 		<![CDATA[
+			import org.flexunit.runner.Request;
+			
 			public function currentRunTestSuite():Array
 			{
 				var testsToRun:Array = new Array();
-				testsToRun.push(TrackerTest);
-				testsToRun.push(SubjectTest);
-				testsToRun.push(TrackerPayloadTest);
-				testsToRun.push(EmitterTest);
-				testsToRun.push(UtilTest);
+				
+				testsToRun.push(Request.methods(UtilTest,["testMapToJsonNode2",
+					"testMapToJsonNode",
+					"testBase64EncodeUnicode",
+					"testGetTransactionId",
+					"testGetTimestamp"]));
+				
+				testsToRun.push(Request.methods(TrackerPayloadTest,["testGetMap",
+					"testAddString",
+					"testSetSchema",
+					"testAddObject",
+					"testSetData",
+					"testAddMap",
+					"testAddMapNotEncoding",
+					"testAddMapEncoding"]));
+				
+				testsToRun.push(Request.methods(EmitterTest,["testEmitterConstructor2",
+					"testBufferOption",
+					"testFlushBuffer",
+					"testFlushPost",
+					"testMaxBuffer",
+					"testFlushGet",
+					"testEmitterConstructor"]));
+				
+				testsToRun.push(Request.methods(SubjectTest,["testGetSubject",
+					"testSetViewPort",
+					"testSetColorDepth",
+					"testSetScreenResolution",
+					"testSetTimezone2",
+					"testSetLanguage",
+					"testSetUserId"]));
+				
+				testsToRun.push(Request.methods(TrackerTest,["testTrackStructuredEvent2",
+					"testTrackPageViewPost",
+					"testSetSchema",
+					"testTrackPageViewPostBase64",
+					"testTrackScreenViewPost",
+					"testTrackPageViewGet",
+					"testTrackScreenViewPostBase64",
+					"testTrackPageViewGetBase64",
+					"testTrackScreenViewGet",
+					"testTrackStructuredEventGet",
+					"testTrackScreenViewGetBase64",
+					"testTrackStructuredEventPost",
+					"testTrackEcommerceTransaction3",
+					"testTrackStructuredEventGetBase64",
+					"testTrackScreenView2",
+					"testTrackStructuredEventPostBase64",
+					"testTrackScreenView3",
+					"testTrackScreenView1",
+					"testTrackEcommerceTransaction2",
+					"testTrackStructuredEvent3",
+					"testTrackStructuredEvent1",
+					"testTrackUnstructuredEvent",
+					"testTrackUnstructuredEvent1",
+					"testTrackUnstructuredEvent2",
+					"testTrackUnstructuredEvent3",
+					"testDefaultPlatform",
+					"testTrackEcommerceTransactionItem",
+					"testSetPlatform",
+					"testTrackEcommerceTransactionPost",
+					"testSetSubject",
+					"testTrackEcommerceTransactionPostBase64",
+					"testTrackEcommerceTransactionGet",
+					"testTrackPageView",
+					"testTrackEcommerceTransactionGetBase64",
+					"testTrackPageView1",
+					"testTrackEcommerceTransaction1",
+					"testTrackPageView2"]));
 				return testsToRun;
 			}
+			
 			
 			private function onCreationComplete():void
 			{
@@ -26,7 +92,6 @@
 			
 		]]>
 	</fx:Script>
-	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
