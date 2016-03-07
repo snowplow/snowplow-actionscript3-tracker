@@ -53,6 +53,7 @@ package com.snowplowanalytics.snowplow.tracker
 		private var isDebugger:Boolean;
 		private var hasLocalStorage:Boolean;
 		private var hasScriptAccess:Boolean;
+		private var allowCookies:Boolean;
 		
 		private var configStorageNamePrefix:String = '_sp_';
 		private var configStorageDomain:String = null;
@@ -72,9 +73,9 @@ package com.snowplowanalytics.snowplow.tracker
 		private var javascriptInfo:Object = null;
 		private var browserFeatures:Object = null;
 		
-		private var localSharedObject:LocalStorage = new LocalStorage(LocalStorage.SHARED_OBJECT);
-		private var localCookies:LocalStorage = new LocalStorage(LocalStorage.COOKIES);
-		private var localBoth:LocalStorage = new LocalStorage(LocalStorage.BOTH);
+		private var localSharedObject:LocalStorage = null;
+		private var localCookies:LocalStorage = null;
+		private var localBoth:LocalStorage = null;
 
 		/**
 		 * @param emitter Emitter to which events will be sent
@@ -84,7 +85,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param stage The flash stage object.  used for adding stage info to payload.
 		 * @param base64Encoded Whether JSONs in the payload should be base-64 encoded
 		 */
-		function Tracker(emitter:Emitter, namespace:String, appId:String, subject:Subject = null, stage:Stage = null, base64Encoded:Boolean = true) {
+		function Tracker(emitter:Emitter, namespace:String, appId:String, subject:Subject = null, stage:Stage = null, base64Encoded:Boolean = true, allowCookies:Boolean = true) {
 			this.emitter = emitter;
 			this.appId = appId;
 			this.base64Encoded = base64Encoded;
@@ -98,15 +99,29 @@ package com.snowplowanalytics.snowplow.tracker
 			this.playerVersion = Capabilities.version;
 			this.isDebugger = Capabilities.isDebugger;
 			
-			try 
+			this.allowCookies = allowCookies;
+			
+			if (allowCookies) 
 			{
-				SharedObject.getLocal("test");
-				this.hasLocalStorage = true;
+				localSharedObject = new LocalStorage(LocalStorage.SHARED_OBJECT);
+				localCookies = new LocalStorage(LocalStorage.COOKIES);
+				localBoth = new LocalStorage(LocalStorage.BOTH);
+
+				try 
+				{
+					SharedObject.getLocal("test");
+					this.hasLocalStorage = true;
+				} 
+				catch (e:Error)
+				{
+					this.hasLocalStorage = false;
+				}
 			} 
-			catch (e:Error)
+			else 
 			{
 				this.hasLocalStorage = false;
 			}
+			
 			this.hasScriptAccess = Util.isScriptAccessAllowed();
 			
 			var defaultJavascriptInfo:Object = {
@@ -130,28 +145,36 @@ package com.snowplowanalytics.snowplow.tracker
 			if (this.hasScriptAccess) {
 	
 				var javascriptInfoScript:String = "function getJavascriptInfo() {\n " +
-					"function cookie(name, value, ttl, path, domain, secure) {\n " +
-					"	\n " +
-					"	if (arguments.length > 1) {\n " +
-					"		return document.cookie = name + '=' + encodeURIComponent(value) +\n " +
-					"		(ttl ? '; expires=' + new Date(+new Date()+(ttl*1000)).toUTCString() : '') +\n " +
-					"		(path   ? '; path=' + path : '') +\n " +
-					"		(domain ? '; domain=' + domain : '') +\n " +
-					"		(secure ? '; secure' : '')\n " +
-					"	}\n " +
-					"	\n " +
-					"	return decodeURIComponent((('; '+document.cookie).split('; '+name+'=')[1]||'').split(';')[0])\n " +
-					"}\n " +
-					"function hasCookies () {\n" +
-					"	var cookieName = 'testcookie';\n" +
-					"	\n" +
-					"	if (typeof navigator.cookieEnabled == 'undefined') {\n" +
-					"		cookie(cookieName, '1');\n" +
-					"		return cookie(cookieName) === '1' ? '1' : '0';\n" +
-					"	}\n" +
-					"	\n" +
-					"	return navigator.cookieEnabled ? '1' : '0';\n" +
-					"}\n" +
+					"function cookie(name, value, ttl, path, domain, secure) {\n ";
+					if (allowCookies) { 
+						javascriptInfoScript +=	"	\n " +
+						"	if (arguments.length > 1) {\n " +
+						"		return document.cookie = name + '=' + encodeURIComponent(value) +\n " +
+						"		(ttl ? '; expires=' + new Date(+new Date()+(ttl*1000)).toUTCString() : '') +\n " +
+						"		(path   ? '; path=' + path : '') +\n " +
+						"		(domain ? '; domain=' + domain : '') +\n " +
+						"		(secure ? '; secure' : '')\n " +
+						"	}\n " +
+						"	\n " +
+						"	return decodeURIComponent((('; '+document.cookie).split('; '+name+'=')[1]||'').split(';')[0])\n ";
+					} else {
+						javascriptInfoScript +=	"	return null;\n ";
+					}						
+					javascriptInfoScript +=	"}\n " +
+					"function hasCookies () {\n";
+				    if (allowCookies) { 
+						javascriptInfoScript +=	"	var cookieName = 'testcookie';\n" +
+							"	\n" +
+							"	if (typeof navigator.cookieEnabled == 'undefined') {\n" +
+							"		cookie(cookieName, '1');\n" +
+							"		return cookie(cookieName) === '1' ? '1' : '0';\n" +
+							"	}\n" +
+							"	\n" +
+							"	return navigator.cookieEnabled ? '1' : '0';\n";
+					} else {
+						javascriptInfoScript +=	"	return false;\n";
+					}
+					javascriptInfoScript +=	"}\n" +
 					"function getMimeTypes () {\n" +
 					"	var mimeTypes = [];\n" +
 					"	for (var i=0; i < navigator.mimeTypes.length; i++) {\n" +
@@ -180,20 +203,28 @@ package com.snowplowanalytics.snowplow.tracker
 					"	}\n" +
 					"	return plugins;\n" +
 					"}\n" +
-					"function hasLocalStorage () {\n" +
-					"  try {\n" +
-					"    return !!window.localStorage;\n" +
-					"  } catch (e) {\n" +
-					"    return true; // SecurityError when referencing it means it exists\n" +
-					"  }\n" +
-					"}\n" +
-					"function hasSessionStorage () {\n" +
-					"  try {\n" +
-					"    return !!window.sessionStorage;\n" +
-					"  } catch (e) {\n" +
-					"    return true; // SecurityError when referencing it means it exists\n" +
-					"  }\n" +
-					"}\n" +
+					"function hasLocalStorage () {\n";
+					if (allowCookies) { 
+						javascriptInfoScript +=	"  try {\n" +
+							"    return !!window.localStorage;\n" +
+							"  } catch (e) {\n" +
+							"    return true; // SecurityError when referencing it means it exists\n" +
+							"  }\n";
+					} else {
+						javascriptInfoScript +=	"	return false;\n";
+					}
+					javascriptInfoScript += "}\n" +
+					"function hasSessionStorage () {\n";
+					if (allowCookies) { 
+						javascriptInfoScript +=	"  try {\n" +
+							"    return !!window.sessionStorage;\n" +
+							"  } catch (e) {\n" +
+							"    return true; // SecurityError when referencing it means it exists\n" +
+							"  }\n";
+					} else {
+						javascriptInfoScript +=	"	return false;\n";
+					}
+					javascriptInfoScript +=	"}\n" +
 					"return { " +
 					"  cd: screen.colorDepth\n" +
 					", cookie: hasCookies()\n" +
@@ -489,14 +520,22 @@ package com.snowplowanalytics.snowplow.tracker
 		* storage getter.
 		*/
 		public function getSnowplowSharedObjectValue(storageName:String):String {
-			return localSharedObject.getLocal(getSnowplowSharedObjectName(storageName));
+			if (localSharedObject == null) {
+				return null;
+			} else {
+				return localSharedObject.getLocal(getSnowplowSharedObjectName(storageName));
+			}
 		}
 		
 		/**
 		 * storage getter.
 		 */
 		public function getSnowplowCookieValue(cookie:String):String {
-			return localCookies.getLocal(getSnowplowCookieName(cookie));
+			if (localCookies == null) {
+				return null;
+			} else {
+				return localCookies.getLocal(getSnowplowCookieName(cookie));
+			}
 		}
 		
 		/**
@@ -555,11 +594,13 @@ package com.snowplowanalytics.snowplow.tracker
 		* or when there is a new visit or a new page view
 		*/
 		public function setDomainUserIdCookie(_domainUserId:String, createTs:String, visitCount:String, nowTs:String, lastVisitTs:String):void {
-			localCookies.setLocal(getSnowplowCookieName('id'), 
-				_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs, 
-				configVisitorCookieTimeout, 
-				configCookiePath, 
-				configStorageDomain);
+			if (localCookies != null) {
+				localCookies.setLocal(getSnowplowCookieName('id'), 
+					_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs, 
+					configVisitorCookieTimeout, 
+					configCookiePath, 
+					configStorageDomain);
+			}
 		}
 		
 		/**
@@ -567,8 +608,10 @@ package com.snowplowanalytics.snowplow.tracker
 		 * or when there is a new visit or a new page view
 		 */
 		public function setDomainUserIdSharedObject(_domainUserId:String, createTs:String, visitCount:String, nowTs:String, lastVisitTs:String):void {
-			localSharedObject.setLocal(getSnowplowSharedObjectName('id'), 
-				_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs);
+			if (localSharedObject != null) {
+				localSharedObject.setLocal(getSnowplowSharedObjectName('id'), 
+					_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs);
+			}
 		}
 		
 		/**
@@ -577,7 +620,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public function loadDomainUserIdCookie():Array {
 			var now:Date = new Date();
 			var	nowTs:Number = Math.round(now.getTime() / 1000);
-			var	id:String = localCookies.getLocal('id');
+			var	id:String = localCookies == null ? null : localCookies.getLocal('id');
 			var	tmpContainer:Array;
 			
 			if (id) {
@@ -620,7 +663,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public function loadDomainUserIdSharedObject():Array {
 			var now:Date = new Date();
 			var	nowTs:Number = Math.round(now.getTime() / 1000);
-			var	id:String = localSharedObject.getLocal('id');
+			var	id:String = localSharedObject == null ? null : localSharedObject.getLocal('id');
 			var	tmpContainer:Array;
 			
 			if (id) {
@@ -704,7 +747,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param string storageName Name of the storage whose value will be assigned to businessUserId
 		 */
 		public function setUserIdFromStorage (storageName:String):void {
-			businessUserId = localBoth.getLocal(storageName);
+			businessUserId = localBoth == null ? null : localBoth.getLocal(storageName);
 		}
 		
 		/**
@@ -861,7 +904,7 @@ package com.snowplowanalytics.snowplow.tracker
 			// Update storage
 			setDomainUserIdSharedObject(sharedObjectDomainUserId, sharedObjectCreateTs, sharedObjectVisitCount.toString(), nowTs, sharedObjectLastVisitTs);
 
-			if (hasScriptAccess) {
+			if (hasScriptAccess && allowCookies) {
 				setDomainUserIdCookie(cookieDomainUserId, cookieCreateTs, cookieVisitCount.toString(), nowTs, cookieLastVisitTs);
 				// only use cookies for session.  flash local storage does not support a TTL.
 				CookieUtil.setCookie(sesname, '*', configSessionCookieTimeout, configCookiePath, configStorageDomain);

@@ -47,7 +47,7 @@ package
 			
 			var node:String = JSON.encode(map);
 			
-			Assert.assertEquals("{\"title\":\"Bobby\u0019s Story\"}", node);
+			Assert.assertEquals("{\"title\":\"Bobby\u1920s Story\"}", node);
 		}
 		
 		[Test]
