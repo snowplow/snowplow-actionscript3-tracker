@@ -16,7 +16,7 @@ package com.snowplowanalytics.snowplow.tracker
 	// DO NOT EDIT. AUTO-GENERATED.
 	public class Version
 	{
-		public static const TRACKER:String = "as3-0.1.0";
-		public static const VERSION:String = "0.1.0";
+		public static const TRACKER:String = "as3-0.3.0";
+		public static const VERSION:String = "0.3.0";
 	}
 }

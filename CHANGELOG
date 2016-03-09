@@ -1,3 +1,7 @@
+Version 0.3.0 (2016-03-09)
+--------------------------
+Add option to disable cookies and FSOs in tracker (#34)
+
 Version 0.2.0 (2016-01-07)
 --------------------------
 Added ability to choose HTTP protocol for Emitter (#33)

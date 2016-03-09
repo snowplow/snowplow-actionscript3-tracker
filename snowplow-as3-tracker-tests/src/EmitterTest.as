@@ -41,7 +41,7 @@ package
 					"page":"My Page",
 					"refr":"www.me.com",
 					"tna":"AF003",
-					"tv":"as3-0.1.0",
+					"tv":"as3-0.3.0",
 					"tz":"Etc/UTC-2:00",
 					"ue_pr":"{\"schema\":\"iglu:com.snowplowanalytics.snowplow/link_click/jsonschema/1-0-1\",\"data\":{\"targetUrl\":\"http://www.google.com\"}}",
 					"url":"www.mypage.com",

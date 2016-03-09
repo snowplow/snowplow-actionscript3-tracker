@@ -6,7 +6,7 @@
 
 	<groupId >com.snowplowanalytics.snowplow.tracker</groupId >
 	<artifactId >snowplow-as3-tracker</artifactId >
-	<version >0.1.0-SNAPSHOT</version >
+	<version >0.3.0</version >
 	<packaging >swc</packaging >
 	<name >Snowplow ActionScript 3.0 Tracker</name >
 
