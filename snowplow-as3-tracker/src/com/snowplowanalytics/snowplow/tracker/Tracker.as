@@ -24,6 +24,7 @@ package com.snowplowanalytics.snowplow.tracker
 	import com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload;
 	import com.snowplowanalytics.snowplow.tracker.util.LocalStorage;
 	import com.snowplowanalytics.snowplow.tracker.util.Preconditions;
+	import com.snowplowanalytics.snowplow.tracker.util.UUID;
 	
 	import de.aggro.utils.CookieUtil;
 	
@@ -629,14 +630,9 @@ package com.snowplowanalytics.snowplow.tracker
 				tmpContainer.unshift('0');
 			} else {
 				// Domain - generate a pseudo-unique ID to fingerprint this user;
-				// Note: this isn't a RFC4122-compliant UUID
 
 				if (!domainUserId) {
-					domainUserId = SHA1.hash(
-						(javascriptInfo.userAgent || '') +
-						(javascriptInfo.platform || '') +
-						JSON.encode(browserFeatures) + nowTs
-					).slice(0, 16); // 16 hexits = 64 bits
+					domainUserId = UUID.generateGuid();
 				}
 				
 				tmpContainer = [
@@ -672,14 +668,9 @@ package com.snowplowanalytics.snowplow.tracker
 				tmpContainer.unshift('0');
 			} else {
 				// Domain - generate a pseudo-unique ID to fingerprint this user;
-				// Note: this isn't a RFC4122-compliant UUID
 				
 				if (!domainUserId) {
-					domainUserId = SHA1.hash(
-						(javascriptInfo.userAgent || '') +
-						(javascriptInfo.platform || '') +
-						JSON.encode(browserFeatures) + nowTs
-					).slice(0, 16); // 16 hexits = 64 bits
+					domainUserId = UUID.generateGuid();
 				}
 				
 				tmpContainer = [
