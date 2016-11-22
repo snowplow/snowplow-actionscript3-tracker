@@ -15,6 +15,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 {
 	import com.adobe.net.URI;
 	import com.snowplowanalytics.snowplow.tracker.Constants;
+	import com.snowplowanalytics.snowplow.tracker.Parameter;
 	import com.snowplowanalytics.snowplow.tracker.Util;
 	import com.snowplowanalytics.snowplow.tracker.event.EmitterEvent;
 	import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
@@ -103,6 +104,8 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 				var unsentPayloads:Array = [];
 				
 				for each (var getPayload:IPayload in _buffer) {
+					// Attach sent timestamp
+					getPayload.add(Parameter.DEVICE_SENT_TIMESTAMP, Util.getTimestamp()); 
 					sendGetData(getPayload,
 						function onGetSuccess (data:*):void {
 							successCount++;
@@ -124,6 +127,8 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 				
 				var eventMaps:Array = [];
 				for each (var payload:IPayload in _buffer) {
+					// Attach sent timestamp
+					payload.add(Parameter.DEVICE_SENT_TIMESTAMP, Util.getTimestamp());
 					eventMaps.push(payload.getMap());
 				}
 
