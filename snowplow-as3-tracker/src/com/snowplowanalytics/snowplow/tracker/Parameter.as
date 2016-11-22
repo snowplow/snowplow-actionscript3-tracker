@@ -22,6 +22,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const EID:String = "eid";
 		public static const DEVICE_CREATED_TIMESTAMP:String = "dtm";
 		public static const DEVICE_SENT_TIMESTAMP:String = "stm";
+		public static const TRUE_TIMESTAMP:String = "ttm";
 		public static const TRACKER_VERSION:String = "tv";
 		public static const APPID:String = "aid";
 		public static const NAMESPACE:String = "tna";

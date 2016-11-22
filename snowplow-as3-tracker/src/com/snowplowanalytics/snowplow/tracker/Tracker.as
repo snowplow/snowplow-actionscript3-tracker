@@ -333,9 +333,9 @@ package com.snowplowanalytics.snowplow.tracker
 				payload.add(Parameter.PAGE_TITLE, javascriptInfo.title);
 				payload.add(Parameter.PAGE_REFR, javascriptInfo.referrer);
 				
-				// If timestamp is set to 0, generate one
-				payload.add(Parameter.DEVICE_CREATED_TIMESTAMP,
-					(timestamp == 0 ? Util.getTimestamp() : String(timestamp)));
+				// Set stm/ttm
+				var timestampParameter:String = timestamp === 0 ? Parameter.DEVICE_CREATED_TIMESTAMP : Parameter.TRUE_TIMESTAMP;
+				payload.add(timestampParameter, (timestamp == 0 ? Util.getTimestamp() : String(timestamp)));
 				
 				// Add flash information
 				if (context == null) {
