@@ -988,7 +988,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param context Custom context for the event
 		 * @param timestamp Optional user-provided timestamp for the event
 		 */
-		public function trackUnstructuredEvent(eventData:SchemaPayload, context:Array = null,
+		public function trackSelfDescribingEvent(eventData:SchemaPayload, context:Array = null,
 			timestamp:Number = 0):void 
 		{
 			if (context == null) context = [];
@@ -1006,6 +1006,22 @@ package com.snowplowanalytics.snowplow.tracker
 			
 			addTrackerPayload(payload);
 		}
+
+		/**
+		 * Deprecated. Wraps `trackSelfDescribingEvent`.
+		 * @param eventData The properties of the event. Has two field:
+		 *                   A "data" field containing the event properties and
+		 *                   A "schema" field identifying the schema against which the data is validated
+		 * @param context Custom context for the event
+		 * @param timestamp Optional user-provided timestamp for the event
+		 */
+		public function trackUnstructuredEvent(eventData:SchemaPayload, context:Array = null,
+			timestamp:Number = 0):void 
+		{
+			trace("method `trackUnstructuredEvent` is deprecated. Use `trackSelfDescribingEvent`");
+			trackSelfDescribingEvent(eventData, context, timestamp);        
+		}
+		
 		
 		/**
 		 * This is an internal method called by track_ecommerce_transaction. It is not for public use.
@@ -1133,7 +1149,7 @@ package com.snowplowanalytics.snowplow.tracker
 				payload.setSchema(Constants.SCHEMA_SCREEN_VIEW);
 				payload.setData(trackerPayload);
 				
-				trackUnstructuredEvent(payload, context, timestamp);
+				trackSelfDescribingEvent(payload, context, timestamp);
 			}
 	}
 }

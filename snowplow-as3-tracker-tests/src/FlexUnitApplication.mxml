@@ -69,6 +69,7 @@
 					"testTrackUnstructuredEvent1",
 					"testTrackUnstructuredEvent2",
 					"testTrackUnstructuredEvent3",
+					"testTrackSelfDescribingEvent",
 					"testDefaultPlatform",
 					"testTrackEcommerceTransactionItem",
 					"testSetPlatform",

@@ -351,6 +351,15 @@ package
 		public function testTrackEcommerceTransactionItem():void {
 			
 		}
+
+		[Test]
+		public function testTrackSelfDescribingEvent():void {
+			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, false);
+			var eventData:SchemaPayload = new SchemaPayload()
+			eventData.add("temp", "100");
+			tracker.trackSelfDescribingEvent(eventData, null, 1479808724);
+		}
 		
 		[Test]
 		public function testTrackEcommerceTransactionPost():void {
