@@ -34,7 +34,10 @@
 					"testFlushPost",
 					"testMaxBuffer",
 					"testFlushGet",
-					"testEmitterConstructor"]));
+					"testEmitterConstructor",
+					"testEmitterConstructor3",
+					"testEmitterConstructorFail1",
+					"testEmitterConstructorFail2"]));
 				
 				testsToRun.push(Request.methods(SubjectTest,["testGetSubject",
 					"testSetViewPort",

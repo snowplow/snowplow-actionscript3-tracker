@@ -37,16 +37,32 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		
 		/**
 		 * Create an Emitter instance with a collector URL and HttpMethod to send requests.
-		 * @param URI The collector URL. Don't include "http://" - this is done automatically.
+		 * @param URI The collector URI.
 		 * @param httpMethod The HTTP request method. If GET, <code>BufferOption</code> is set to <code>Instant</code>.
-		 * @param protocol The protocol for the call. Either http or https. Defaults to http.
+		 * @param protocol The protocol for the call. Either http or https. Defaults to protocol provided in the uri.
 		 */
-		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, protocol:String = "http") {
+		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, protocol:String = Parameter.PROTOCOL_AUTO) {
+			//protocol is string. Enums and Comparision 
+			//See http://stackoverflow.com/questions/39506217/create-enum-in-actionscript-3-and-compare
+
+			var emitterProtocol:EmitterProtocol = new EmitterProtocol(protocol);
+
+			if (emitterProtocol.scheme == Parameter.PROTOCOL_AUTO) {
+				var protocolScheme:Array = uri.match("^(http|https)://");
+				if (protocolScheme) {
+					trace("Collector protocol is " + protocolScheme[0]);
+				} else {
+					throw new EmitterError("Invalid protocol scheme provided in uri. Use http or https");
+				}
+			} else {
+				// Set http/https protocol in uri
+				uri = emitterProtocol.scheme + "://";
+			}
 			
 			if (httpMethod == URLRequestMethod.GET) {
-				_uri = new URI(protocol + "://" + uri + "/i");
+				_uri = new URI(uri + "/i");
 			} else { // POST
-				_uri = new URI(protocol + "://" + uri + "/" + Constants.PROTOCOL_VENDOR + "/" + Constants.PROTOCOL_VERSION);
+				_uri = new URI(uri + "/" + Constants.PROTOCOL_VENDOR + "/" + Constants.PROTOCOL_VERSION);
 			}
 			
 			this.httpMethod = httpMethod;

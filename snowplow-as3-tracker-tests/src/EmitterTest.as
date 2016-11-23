@@ -15,6 +15,7 @@ package
 {
 	import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption;
 	import com.snowplowanalytics.snowplow.tracker.emitter.Emitter;
+	import com.snowplowanalytics.snowplow.tracker.emitter.EmitterError;
 	import com.snowplowanalytics.snowplow.tracker.event.EmitterEvent;
 	import com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload;
 	
@@ -26,7 +27,7 @@ package
 	
 	public class EmitterTest
 	{
-		private static var testURL:String = "astracker.snplow.com";
+		private static var testURL:String = "https://astracker.snplow.com";
 		private var callCompleted:Boolean = false;
 		private var testPayloadData:Object = {
 			"schema":"iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-0",
@@ -59,6 +60,36 @@ package
 		[Test]
 		public function testEmitterConstructor2():void {
 			var emitter:Emitter = new Emitter(testURL);
+		}
+
+		[Test]
+		public function testEmitterConstructor3():void {
+			//Uri with protocol
+		var emitter:Emitter = new Emitter("analytics.snowplow.com", URLRequestMethod.POST, "http");
+		}
+
+		[Test]
+		public function testEmitterConstructorFail1():void {
+			//Uri without scheme for Protocol.AUTO
+			try
+			{
+				var emitter:Emitter = new Emitter("analytics.snowplow.com");
+			} catch (e: EmitterError)
+			{
+					Assert.assertEquals(e.message, "Invalid protocol scheme provided in uri. Use http or https");
+			}
+		}
+
+		[Test]
+		public function testEmitterConstructorFail2():void {
+			//Uri with incorrect protocol
+			try
+			{
+				var emitter:Emitter = new Emitter("analytics.snowplow.com", URLRequestMethod.POST, "ftp");
+			} catch (e: EmitterError)
+			{
+					Assert.assertEquals(e.message, "Invalid Protocol provided to emitter. Use http/https or Auto to detect from uri.");
+			}
 		}
 		
 		[Test]

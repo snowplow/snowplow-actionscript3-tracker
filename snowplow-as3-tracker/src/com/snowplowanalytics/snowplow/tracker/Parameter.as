@@ -94,5 +94,9 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const FLASH_HAS_LOCAL_STORAGE:String = "hasLocalStorage";
 		public static const FLASH_HAS_SCRIPT_ACCESS:String = "hasScriptAccess";
 		
+		// Protocol
+		public static const PROTOCOL_AUTO:String = "auto";
+    public static const PROTOCOL_HTTP:String = "http";
+    public static const PROTOCOL_HTTPS:String = "https";
 	}
 }
