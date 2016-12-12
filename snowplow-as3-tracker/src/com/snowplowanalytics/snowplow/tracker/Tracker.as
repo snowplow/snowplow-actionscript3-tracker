@@ -503,6 +503,13 @@ package com.snowplowanalytics.snowplow.tracker
 		}
 		
 		/**
+		 * Get page url
+		 */
+		public function getPageUrl ():String {
+			return javascriptInfo.pageUrl;
+		}
+		
+		/**
 		* Get storage name with prefix and domain hash
 		*/
 		public function getSnowplowCookieName (baseName:String):String {
