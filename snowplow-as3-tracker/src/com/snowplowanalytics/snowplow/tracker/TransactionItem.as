@@ -31,7 +31,7 @@ package com.snowplowanalytics.snowplow.tracker
 			
 			put(Parameter.CONTEXT, context);
 			
-			put(Parameter.TIMESTAMP, Util.getTimestamp());
+			put(Parameter.DEVICE_CREATED_TIMESTAMP, Util.getTimestamp());
 		}
 		
 		public function get(key:String):*
