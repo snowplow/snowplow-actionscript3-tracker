@@ -93,6 +93,13 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const FLASH_IS_DEBUGGER:String = "isDebugger";
 		public static const FLASH_HAS_LOCAL_STORAGE:String = "hasLocalStorage";
 		public static const FLASH_HAS_SCRIPT_ACCESS:String = "hasScriptAccess";
+
+		// Client Session
+		public static const CLIENT_SESSION_USER_ID:String = "userId";
+		public static const CLIENT_SESSION_STORAGE_MECHANISM:String = "storageMechanism";
+		public static const CLIENT_SESSION_PREVIOUS_ID:String = "previousSessionId";
+		public static const CLIENT_SESSION_ID:String = "sessionId";
+		public static const CLIENT_SESSION_INDEX:String = "sessionIndex";
 		
 		// Protocol
 		public static const PROTOCOL_AUTO:String = "auto";

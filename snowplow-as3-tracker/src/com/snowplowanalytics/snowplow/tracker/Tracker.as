@@ -77,6 +77,8 @@ package com.snowplowanalytics.snowplow.tracker
 		private var localSharedObject:LocalStorage = null;
 		private var localCookies:LocalStorage = null;
 		private var localBoth:LocalStorage = null;
+		private var storageMechanism:String = null;
+
 
 		/**
 		 * @param emitter Emitter to which events will be sent
@@ -103,15 +105,18 @@ package com.snowplowanalytics.snowplow.tracker
 			this.allowCookies = allowCookies;
 			
 			if (allowCookies) 
-			{
+			{	
 				localSharedObject = new LocalStorage(LocalStorage.SHARED_OBJECT);
 				localCookies = new LocalStorage(LocalStorage.COOKIES);
 				localBoth = new LocalStorage(LocalStorage.BOTH);
+				// Add First party cookie to storageMechanism.
+				this.storageMechanism = "COOKIE_1";
 
 				try 
 				{
 					SharedObject.getLocal("test");
 					this.hasLocalStorage = true;
+					this.storageMechanism = "FLASH_LSO";
 				} 
 				catch (e:Error)
 				{
@@ -362,11 +367,16 @@ package com.snowplowanalytics.snowplow.tracker
 
 				var flashPayload:SchemaPayload = new SchemaPayload();
 				flashPayload.setSchema(Constants.SCHEMA_FLASH);
-				flashPayload.setData(flashData.getMap());
+				flashPayload.setData(flashData.getMap());	
 
-				addBrowserData(payload, flashPayload);
+				// Build client session payload
+				var clientSessionPayload:SchemaPayload = new SchemaPayload();
+				clientSessionPayload.setSchema(Constants.SCHEMA_CLIENT_SESSION);
 				
+				addBrowserData(payload, flashPayload, clientSessionPayload);
+
 				context.push(flashPayload);
+				context.push(clientSessionPayload);
 				
 				// Encodes context data
 				if (context != null && context.length > 0) {
@@ -594,10 +604,10 @@ package com.snowplowanalytics.snowplow.tracker
 		* Sets the Visitor ID storage: either the first time loadDomainUserIdStorage is called
 		* or when there is a new visit or a new page view
 		*/
-		public function setDomainUserIdCookie(_domainUserId:String, createTs:String, visitCount:String, nowTs:String, lastVisitTs:String):void {
+		public function setDomainUserIdCookie(_domainUserId:String, createTs:String, visitCount:String, nowTs:String, lastVisitTs:String, sessionId:String):void {
 			if (localCookies != null) {
 				localCookies.setLocal(getSnowplowCookieName('id'), 
-					_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs, 
+					_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs + '.' + sessionId, 
 					configVisitorCookieTimeout, 
 					configCookiePath, 
 					configStorageDomain);
@@ -608,10 +618,10 @@ package com.snowplowanalytics.snowplow.tracker
 		 * Sets the Visitor ID storage: either the first time loadDomainUserIdStorage is called
 		 * or when there is a new visit or a new page view
 		 */
-		public function setDomainUserIdSharedObject(_domainUserId:String, createTs:String, visitCount:String, nowTs:String, lastVisitTs:String):void {
+		public function setDomainUserIdSharedObject(_domainUserId:String, createTs:String, visitCount:String, nowTs:String, lastVisitTs:String, currentSessionId:String, previousSessionId: String):void {
 			if (localSharedObject != null) {
 				localSharedObject.setLocal(getSnowplowSharedObjectName('id'), 
-					_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs);
+					_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs + '.' + currentSessionId + '.' + previousSessionId);
 			}
 		}
 		
@@ -647,6 +657,8 @@ package com.snowplowanalytics.snowplow.tracker
 					// Current visit timestamp
 					nowTs,
 					// Last visit timestamp - blank meaning no previous visit
+					'',
+					// No previous session id
 					''
 				];
 			}
@@ -685,7 +697,11 @@ package com.snowplowanalytics.snowplow.tracker
 					// Current visit timestamp
 					nowTs,
 					// Last visit timestamp - blank meaning no previous visit
-					''
+					'',
+					// Current session id
+					null,
+					// No previous session id
+					null
 				];
 			}
 			return tmpContainer;
@@ -850,18 +866,19 @@ package com.snowplowanalytics.snowplow.tracker
 		* (resolution, url, referrer, etc.)
 		* Also sets the required storage.
 		*/
-		public function addBrowserData(payload:IPayload, flashPayload:IPayload):void {
+		public function addBrowserData(payload:IPayload, flashPayload:IPayload, clientSessionPayload:IPayload):void {
 			var nowTs:String = Math.round(new Date().getTime() / 1000).toString();
 			var	idname:String = getSnowplowCookieName('id');
 			var	sesname:String = getSnowplowCookieName('ses');
 			var	ses:String = getSnowplowCookieValue('ses'); // aka cookie.cookie(sesname)
-			
+
 			var	cookieId:Array = loadDomainUserIdCookie();
 			var	cookieDomainUserId:String = cookieId[1]; // We could use the global (domainUserId) but this is better etiquette
 			var cookieCreateTs:String = cookieId[2];
 			var cookieVisitCount:Number = parseInt(cookieId[3]);
 			var cookieCurrentVisitTs:String = cookieId[4];
 			var cookieLastVisitTs:String = cookieId[5];
+			var cookieSessionId:String = cookieId[6];
 			
 			var	sharedObjectId:Array = loadDomainUserIdSharedObject();
 			var	sharedObjectDomainUserId:String = sharedObjectId[1]; // We could use the global (domainUserId) but this is better etiquette
@@ -869,13 +886,21 @@ package com.snowplowanalytics.snowplow.tracker
 			var sharedObjectVisitCount:Number = parseInt(sharedObjectId[3]);
 			var sharedObjectCurrentVisitTs:String = sharedObjectId[4];
 			var sharedObjectLastVisitTs:String = sharedObjectId[5];
+			var sharedObjectCurrentSessionId:String = sharedObjectId[6];
+			var sharedObjectPreviousSessionId:String = sharedObjectId[7];
 			
 			// New session?
 			if (!ses) {
-				// New session (aka new visit)
+				// New session (aka new visit), swap the current to previous.
+				sharedObjectPreviousSessionId = sharedObjectCurrentSessionId;
+				// Create new sessionId
+				cookieSessionId = UUID.generateGuid();
+				sharedObjectCurrentSessionId = cookieSessionId;
 				cookieVisitCount++;
 				// Update the last visit timestamp
 				cookieLastVisitTs = cookieCurrentVisitTs;
+			} else {
+				sharedObjectCurrentSessionId = cookieSessionId;
 			}
 			
 			sharedObjectVisitCount++;
@@ -889,20 +914,32 @@ package com.snowplowanalytics.snowplow.tracker
 			payload.add(Parameter.UID, businessUserId);
 			
 			flashPayload.add(Parameter.SHARED_OBJECT_VISIT_COUNT, sharedObjectVisitCount);
-			flashPayload.add(Parameter.SHARED_OBJECT_DOMAIN_USER_ID, sharedObjectDomainUserId); // Set to our local variable
+			flashPayload.add(Parameter.SHARED_OBJECT_DOMAIN_USER_ID, sharedObjectDomainUserId);
 			flashPayload.add(Parameter.SHARED_OBJECT_USER_FINGERPRINT, sharedObjectUserFingerprint);
+
+			// Set cookieDomainUserId or storageObjectDomainUserId based on storage mechanism
+			var _user_id:String;
+			if (this.storageMechanism == 'FLASH_LSO') {
+				_user_id = sharedObjectDomainUserId;
+			} else {
+				_user_id = cookieDomainUserId;
+			}
+			clientSessionPayload.add(Parameter.CLIENT_SESSION_USER_ID, _user_id);
+			clientSessionPayload.add(Parameter.CLIENT_SESSION_STORAGE_MECHANISM, this.storageMechanism);
+			clientSessionPayload.add(Parameter.CLIENT_SESSION_PREVIOUS_ID, sharedObjectPreviousSessionId);
+			clientSessionPayload.add(Parameter.CLIENT_SESSION_ID, sharedObjectCurrentSessionId);
+			clientSessionPayload.add(Parameter.CLIENT_SESSION_INDEX, isNaN(cookieVisitCount) ? "0" :  cookieVisitCount.toString());
 			
 			// Update storage
-			setDomainUserIdSharedObject(sharedObjectDomainUserId, sharedObjectCreateTs, sharedObjectVisitCount.toString(), nowTs, sharedObjectLastVisitTs);
+			setDomainUserIdSharedObject(sharedObjectDomainUserId, sharedObjectCreateTs, sharedObjectVisitCount.toString(), nowTs, sharedObjectLastVisitTs, sharedObjectCurrentSessionId, sharedObjectPreviousSessionId);
 
 			if (hasScriptAccess && allowCookies) {
-				setDomainUserIdCookie(cookieDomainUserId, cookieCreateTs, cookieVisitCount.toString(), nowTs, cookieLastVisitTs);
+				setDomainUserIdCookie(cookieDomainUserId, cookieCreateTs, cookieVisitCount.toString(), nowTs, cookieLastVisitTs, cookieSessionId);
 				// only use cookies for session.  flash local storage does not support a TTL.
 				CookieUtil.setCookie(sesname, '*', configSessionCookieTimeout, configCookiePath, configStorageDomain);
 			}
 		}
 
-		
 		/**
 		 * @param pageUrl URL of the viewed page
 		 * @param pageTitle Title of the viewed page
