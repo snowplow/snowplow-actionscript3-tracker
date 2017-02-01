@@ -24,6 +24,7 @@ package com.snowplowanalytics.snowplow.tracker
 	import com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload;
 	import com.snowplowanalytics.snowplow.tracker.util.LocalStorage;
 	import com.snowplowanalytics.snowplow.tracker.util.Preconditions;
+	import com.snowplowanalytics.snowplow.tracker.util.UUID;
 	
 	import de.aggro.utils.CookieUtil;
 	
@@ -38,6 +39,7 @@ package com.snowplowanalytics.snowplow.tracker
 	public class Tracker
 	{
 		private var domainUserId:String;
+		private var memorizedSessionId:String;
 		
 		private var base64Encoded:Boolean = true;
 		private var emitter:Emitter;
@@ -95,6 +97,7 @@ package com.snowplowanalytics.snowplow.tracker
 			this.platform = DevicePlatform.WEB;
 			this.stage = stage;
 			
+			this.memorizedSessionId = UUID.generateGuid();
 			this.playerType = Capabilities.playerType;
 			this.playerVersion = Capabilities.version;
 			this.isDebugger = Capabilities.isDebugger;
@@ -610,7 +613,7 @@ package com.snowplowanalytics.snowplow.tracker
 			}
 		}
 		
-		/**
+		/**"
 		 * Sets the Visitor ID storage: either the first time loadDomainUserIdStorage is called
 		 * or when there is a new visit or a new page view
 		 */
@@ -900,6 +903,7 @@ package com.snowplowanalytics.snowplow.tracker
 			payload.add(Parameter.VIEWPORT, detectViewport());
 			payload.add(Parameter.DOCUMENT_SIZE, detectDocumentSize());
 			payload.add(Parameter.VISIT_COUNT, isNaN(cookieVisitCount) ? "0" :  cookieVisitCount.toString());
+			payload.add(Parameter.SESSION_ID, memorizedSessionId);
 			payload.add(Parameter.DOMAIN_USER_ID, cookieDomainUserId); // Set to our local variable
 			payload.add(Parameter.USER_FINGERPRINT, cookieUserFingerprint.toString());
 			payload.add(Parameter.UID, businessUserId);

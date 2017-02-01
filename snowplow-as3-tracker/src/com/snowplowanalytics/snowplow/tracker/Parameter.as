@@ -25,6 +25,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const TRACKER_VERSION:String = "tv";
 		public static const APPID:String = "aid";
 		public static const NAMESPACE:String = "tna";
+		public static const SESSION_ID:String = "sid";
 		
 		public static const UID:String = "uid";
 		public static const CONTEXT:String = "co";

@@ -18,7 +18,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const PROTOCOL_VENDOR:String = "com.snowplowanalytics.snowplow";
 		public static const PROTOCOL_VERSION:String = "tp2"; // Tracker Protocol v2
 		
-		public static const SCHEMA_PAYLOAD_DATA:String = "iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-0";
+		public static const SCHEMA_PAYLOAD_DATA:String = "iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-3";
 		public static const SCHEMA_CONTEXTS:String = "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0";
 		public static const SCHEMA_UNSTRUCT_EVENT:String = "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0";
 		public static const SCHEMA_SCREEN_VIEW:String = "iglu:com.snowplowanalytics.snowplow/screen_view/jsonschema/1-0-0";
