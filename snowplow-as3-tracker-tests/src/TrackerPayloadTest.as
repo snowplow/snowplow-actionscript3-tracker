@@ -16,6 +16,9 @@ package
 	import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
 	import com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload;
 	import com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload;
+
+	import flash.utils.ByteArray;
+	import com.adobe.serialization.json.JSON;
 	
 	import org.flexunit.Assert;
 
@@ -143,7 +146,6 @@ package
 		[Test]
 		public function testGetMap():void {
 			var payload:SchemaPayload;
-			var res:String;
 			var foo:Object = {};
 			var bar:Array = [];
 			bar.push("somebar");
@@ -156,6 +158,27 @@ package
 			payload.setData(foo);
 			
 			Assert.assertTrue(Helpers.compareObjects(data, payload.getMap()));
+		}
+
+		[Test]
+		public function testPayloadSize():void {
+			var payload:SchemaPayload;
+			var foo:Object = {};
+			var bar:Array = [];
+			bar.push("somebar");
+			bar.push("somebar2");
+			foo["myKey"] = "my Value";
+			foo["mehh"] = bar;
+			var data:Object = {};
+			data["data"] = foo;
+			payload = new SchemaPayload();
+			payload.setData(foo);
+
+			var dataInByteArray:ByteArray = new ByteArray();
+			dataInByteArray.writeUTFBytes(JSON.encode(data));
+			var dataSize:int = dataInByteArray.length;
+			
+			Assert.assertTrue(Helpers.compareObjects(dataSize, payload.size()));
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2015 Snowplow Analytics Ltd. All rights reserved.
+* Copyright (c) 2017 Snowplow Analytics Ltd. All rights reserved.
 *
 * This program is licensed to you under the Apache License Version 2.0,
 * and you may not use this file except in compliance with the Apache License Version 2.0.
@@ -13,10 +13,34 @@
 
 package com.snowplowanalytics.snowplow.tracker.emitter
 {
-	public class BufferOption
-	{
-		public static const BATCH:int = 50000; //bytes
-		public static const INSTANT:int = 0;
-		public static const DEFAULT:int = 0; // Tracker Protocol v2
-	}
+
+  public interface IBuffer
+  {
+    /**
+     * Returns the buffer content as an Array
+     * @returns A Buffer
+     */
+    function get():Array;
+
+    /**
+     * Add payload to buffer.
+     * @param Array of IPayloads
+     */
+    function push(payload: Array):void;
+
+    /**
+     * Returns the number of items in buffer
+     */
+     function length():int;
+
+     /**
+     * Return the byte size of the buffer
+     */
+     function size():int;
+
+    /**
+     * Clears the buffer.
+     */
+     function clear():void;
+  }
 }

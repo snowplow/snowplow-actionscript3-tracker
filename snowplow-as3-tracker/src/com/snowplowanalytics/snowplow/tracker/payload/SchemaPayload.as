@@ -13,6 +13,7 @@
 
 package com.snowplowanalytics.snowplow.tracker.payload
 {
+	import flash.utils.ByteArray;
 	import com.adobe.serialization.json.JSON;
 	import com.snowplowanalytics.snowplow.tracker.Parameter;
 	import com.snowplowanalytics.snowplow.tracker.Util;
@@ -75,6 +76,13 @@ package com.snowplowanalytics.snowplow.tracker.payload
 		public function toString():String
 		{
 			return JSON.encode(objectNode);
+		}
+
+		public function size():int
+		{
+			var payload:ByteArray = new ByteArray();
+			payload.writeUTFBytes(JSON.encode(objectNode));
+			return payload.length;
 		}
 	}
 }

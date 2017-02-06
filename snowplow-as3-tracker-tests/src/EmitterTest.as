@@ -197,5 +197,16 @@ package
 			}
 		}
 
+		[Test]
+		public function testLocalBufferStorage():void {
+			try
+			{
+				var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET, "https", true);
+			} catch (e: EmitterError)
+			{
+					Assert.assertEquals(e.message, "Local storage is unavailable for Buffering");
+			}
+		}
+
 	}
 }

@@ -46,5 +46,13 @@ package com.snowplowanalytics.snowplow.tracker.payload
 		 * @return A string value of the Payload.
 		 */
 		function toString():String;
+
+		/**
+		 * Return the size of the payload. This is the byteArray length of the ObjectNode used
+		 * to store the payload.
+		 * @return int
+		 */
+		 function size():int;
+
 	}
 }
