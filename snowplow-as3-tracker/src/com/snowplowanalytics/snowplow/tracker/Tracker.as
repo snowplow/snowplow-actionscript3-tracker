@@ -13,10 +13,8 @@
 
 package com.snowplowanalytics.snowplow.tracker
 {
-	import adobe.utils.CustomActions;
-	
+
 	import com.adobe.crypto.SHA1;
-	import com.adobe.net.URI;
 	import com.adobe.serialization.json.JSON;
 	import com.snowplowanalytics.snowplow.tracker.emitter.Emitter;
 	import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
@@ -27,7 +25,7 @@ package com.snowplowanalytics.snowplow.tracker
 	import com.snowplowanalytics.snowplow.tracker.util.UUID;
 	
 	import de.aggro.utils.CookieUtil;
-	
+
 	import flash.display.Stage;
 	import flash.external.ExternalInterface;
 	import flash.net.LocalConnection;
@@ -110,7 +108,6 @@ package com.snowplowanalytics.snowplow.tracker
 				localCookies = new LocalStorage(LocalStorage.COOKIES);
 				localBoth = new LocalStorage(LocalStorage.BOTH);
 				// Add First party cookie to storageMechanism.
-				this.storageMechanism = "COOKIE_1";
 
 				try 
 				{
@@ -121,6 +118,7 @@ package com.snowplowanalytics.snowplow.tracker
 				catch (e:Error)
 				{
 					this.hasLocalStorage = false;
+                    this.storageMechanism = "COOKIE_1";
 				}
 			} 
 			else 
@@ -248,9 +246,9 @@ package com.snowplowanalytics.snowplow.tracker
 					", userAgent: navigator.userAgent \n" +
 					"}; }";
 				
-				try { javascriptInfo = ExternalInterface.call(javascriptInfoScript); }
+				try { this.javascriptInfo = ExternalInterface.call(javascriptInfoScript); }
 				catch(e:Error) { 
-					javascriptInfo = defaultJavascriptInfo; 
+					this.javascriptInfo = defaultJavascriptInfo;
 				}								
 				
 				var fromQuerystringMethod:String = "function fromQuerystring (field, url) {\n" +
@@ -288,31 +286,31 @@ package com.snowplowanalytics.snowplow.tracker
 					"}\n" +
 					"return referrer; }";
 				
-				if (javascriptInfo == null){
-					javascriptInfo = defaultJavascriptInfo;
+				if (this.javascriptInfo == null){
+					this.javascriptInfo = defaultJavascriptInfo;
 				}
 				
 				try { 
-					javascriptInfo.referrer = ExternalInterface.call(getReferrerMethod);
+					this.javascriptInfo.referrer = ExternalInterface.call(getReferrerMethod);
 				} 
 				catch(e:Error){
-					javascriptInfo.referrer = null; 
+					this.javascriptInfo.referrer = null;
 				}
 				
-				var locationArray:Array = Util.fixupUrl(javascriptInfo.domain, javascriptInfo.pageUrl, javascriptInfo.referrer);
-				javascriptInfo.domain = Util.fixupDomain(locationArray[0]);
-				javascriptInfo.pageUrl = locationArray[1];
-				javascriptInfo.referrer = locationArray[2];
+				var locationArray:Array = Util.fixupUrl(this.javascriptInfo.domain, this.javascriptInfo.pageUrl, this.javascriptInfo.referrer);
+				this.javascriptInfo.domain = Util.fixupDomain(locationArray[0]);
+				this.javascriptInfo.pageUrl = locationArray[1];
+				this.javascriptInfo.referrer = locationArray[2];
 				
-				browserFeatures = detectBrowserFeatures();
+				this.browserFeatures = detectBrowserFeatures();
 				
-				cookieUserFingerprint = detectJavascriptSignature(configUserFingerprintHashSeed);
+				this.cookieUserFingerprint = detectJavascriptSignature(this.configUserFingerprintHashSeed);
 			} else { //we can not get javascript info since we have no script access
-				javascriptInfo = defaultJavascriptInfo;
-				cookieUserFingerprint = NaN;
+				this.javascriptInfo = defaultJavascriptInfo;
+				this.cookieUserFingerprint = NaN;
 			}
 			
-			sharedObjectUserFingerprint = detectFlashSignature(configUserFingerprintHashSeed);
+			sharedObjectUserFingerprint = detectFlashSignature(this.configUserFingerprintHashSeed);
 			
 			updateCookieDomainHash();
 		}
@@ -323,10 +321,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param timestamp Optional user-provided timestamp for the event
 		 * @return A completed Payload
 		 */
-		protected function completePayload(payload:IPayload, 
-										   context:Array,
-										   timestamp:Number):IPayload {
-			
+		protected function completePayload(payload:IPayload, context:Array, timestamp:Number):IPayload {
 				payload.add(Parameter.PLATFORM, this.platform);
 				payload.add(Parameter.APPID, this.appId);
 				payload.add(Parameter.NAMESPACE, this.namespace);
@@ -334,9 +329,9 @@ package com.snowplowanalytics.snowplow.tracker
 				payload.add(Parameter.EID, Util.getEventId());
 				
 				//Add page data
-				payload.add(Parameter.PAGE_URL, customUrl == null ? javascriptInfo.pageUrl : customUrl);
-				payload.add(Parameter.PAGE_TITLE, javascriptInfo.title);
-				payload.add(Parameter.PAGE_REFR, javascriptInfo.referrer);
+				payload.add(Parameter.PAGE_URL, this.customUrl == null ? this.javascriptInfo.pageUrl : this.customUrl);
+				payload.add(Parameter.PAGE_TITLE, this.javascriptInfo.title);
+				payload.add(Parameter.PAGE_REFR, this.javascriptInfo.referrer);
 				
 				// Set stm/ttm
 				var timestampParameter:String = timestamp === 0 ? Parameter.DEVICE_CREATED_TIMESTAMP : Parameter.TRUE_TIMESTAMP;
@@ -353,10 +348,10 @@ package com.snowplowanalytics.snowplow.tracker
 				flashData.add(Parameter.FLASH_IS_DEBUGGER, isDebugger);
 				flashData.add(Parameter.FLASH_HAS_LOCAL_STORAGE, hasLocalStorage);
 				flashData.add(Parameter.FLASH_HAS_SCRIPT_ACCESS, hasScriptAccess);
-				if (stage != null) {
+				if (this.stage != null) {
 					try
 					{
-						flashData.add(Parameter.FLASH_STAGE_SIZE, { "width": stage.stageWidth, "height": stage.stageHeight});	
+						flashData.add(Parameter.FLASH_STAGE_SIZE, { "width": this.stage.stageWidth, "height": this.stage.stageHeight});
 					}
 					catch (e:Error)
 					{
@@ -372,8 +367,10 @@ package com.snowplowanalytics.snowplow.tracker
 				// Build client session payload
 				var clientSessionPayload:SchemaPayload = new SchemaPayload();
 				clientSessionPayload.setSchema(Constants.SCHEMA_CLIENT_SESSION);
-				
-				addBrowserData(payload, flashPayload, clientSessionPayload);
+				var clientSessionData:TrackerPayload = new TrackerPayload();
+
+				addBrowserData(payload, flashPayload, clientSessionData);
+				clientSessionPayload.setData((clientSessionData.getMap()));
 
 				context.push(flashPayload);
 				context.push(clientSessionPayload);
@@ -394,7 +391,7 @@ package com.snowplowanalytics.snowplow.tracker
 				}
 				
 				if (this.subject != null) {
-					payload.addMap(Util.copyObject(subject.getSubject(), true));
+					payload.addMap(Util.copyObject(this.subject.getSubject(), true));
 				}
 				
 				return payload;
@@ -409,19 +406,19 @@ package com.snowplowanalytics.snowplow.tracker
 		}
 		
 		public function setReferrerUrl(url:String):void {
-			javascriptInfo.referrer = url;
+			this.javascriptInfo.referrer = url;
 		}
 
 		public function getReferrerUrl():String {
-			return javascriptInfo.referrer;
+			return this.javascriptInfo.referrer;
 		}
 		
 		public function setCustomUrl(url:String):void {
-			customUrl = url;
+			this.customUrl = url;
 		}
 		
 		public function getCustomUrl():String {
-			return customUrl;
+			return this.customUrl;
 		}
 		
 		protected function setTrackerVersion(version:String):void {
@@ -441,29 +438,29 @@ package com.snowplowanalytics.snowplow.tracker
 		}
 		
 		public function getCookieUserFingerprint():Number {
-			return cookieUserFingerprint;
+			return this.cookieUserFingerprint;
 		}
 		
 		public function getSharedObjectUserFingerprint():Number {
-			return sharedObjectUserFingerprint;
+			return this.sharedObjectUserFingerprint;
 		}
 		
 		/**
 		* Update domain hash
 		*/
 		public function updateCookieDomainHash():void {
-			var stringToHash:String = (configStorageDomain || javascriptInfo.domain) + (configCookiePath || '/');
+			var stringToHash:String = (this.configStorageDomain || this.javascriptInfo.domain) + (this.configCookiePath || '/');
 			var hash:String = SHA1.hash(stringToHash);
-			cookieDomainHash = hash.slice(0, 4); // 4 hexits = 16 bits
+			this.cookieDomainHash = hash.slice(0, 4); // 4 hexits = 16 bits
 		}
 		
 		/**
 		 * Update domain hash
 		 */
 		public function updateSharedObjectDomainHash():void {
-			var stringToHash:String = (configStorageDomain || javascriptInfo.domain) + (configCookiePath || '/');
+			var stringToHash:String = (this.configStorageDomain || this.javascriptInfo.domain) + (this.configCookiePath || '/');
 			var hash:String = SHA1.hash(stringToHash);
-			sharedObjectDomainHash = hash.slice(0, 4); // 4 hexits = 16 bits
+			this.sharedObjectDomainHash = hash.slice(0, 4); // 4 hexits = 16 bits
 		}
 		
 		/**
@@ -472,7 +469,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param string domain
 		 */
 		public function setCookieDomain (domain:String):void {
-			configStorageDomain = Util.fixupDomain(domain);
+			this.configStorageDomain = Util.fixupDomain(domain);
 			updateCookieDomainHash();
 		}
 		
@@ -482,7 +479,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param int timeout
 		 */
 		public function setVisitorCookieTimeout (timeout:int):void {
-			configVisitorCookieTimeout = timeout;
+			this.configVisitorCookieTimeout = timeout;
 		}
 		
 		/**
@@ -491,7 +488,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param int timeout
 		 */
 		public function setSessionCookieTimeout (timeout:int):void {
-			configSessionCookieTimeout = timeout;
+			this.configSessionCookieTimeout = timeout;
 		}		
 		
 		/**
@@ -500,7 +497,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param string domain
 		 */
 		public function setCookiePath (path:String):void {
-			configCookiePath = path;
+			this.configCookiePath = path;
 			updateCookieDomainHash();
 		}
 		
@@ -510,31 +507,31 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param string cookieNamePrefix
 		 */
 		public function setStorageNamePrefix (storageNamePrefix:String):void {
-			configStorageNamePrefix = storageNamePrefix;
+			this.configStorageNamePrefix = storageNamePrefix;
 		}
 		
 		/**
 		* Get storage name with prefix and domain hash
 		*/
 		public function getSnowplowCookieName (baseName:String):String {
-			return configStorageNamePrefix + baseName + '.' + cookieDomainHash;
+			return this.configStorageNamePrefix + baseName + '.' + this.cookieDomainHash;
 		}
 
 		/**
 		 * Get storage name with prefix and domain hash
 		 */
 		public function getSnowplowSharedObjectName (baseName:String):String {
-			return configStorageNamePrefix + baseName + '.' + sharedObjectDomainHash;
+			return this.configStorageNamePrefix + baseName + '.' + this.sharedObjectDomainHash;
 		}
 		
 		/**
 		* storage getter.
 		*/
 		public function getSnowplowSharedObjectValue(storageName:String):String {
-			if (localSharedObject == null) {
+			if (this.localSharedObject == null) {
 				return null;
 			} else {
-				return localSharedObject.getLocal(getSnowplowSharedObjectName(storageName));
+				return this.localSharedObject.getLocal(getSnowplowSharedObjectName(storageName));
 			}
 		}
 		
@@ -542,10 +539,10 @@ package com.snowplowanalytics.snowplow.tracker
 		 * storage getter.
 		 */
 		public function getSnowplowCookieValue(cookie:String):String {
-			if (localCookies == null) {
+			if (this.localCookies == null) {
 				return null;
 			} else {
-				return localCookies.getLocal(getSnowplowCookieName(cookie));
+				return this.localCookies.getLocal(getSnowplowCookieName(cookie));
 			}
 		}
 		
@@ -578,24 +575,24 @@ package com.snowplowanalytics.snowplow.tracker
 			};
 			
 			// General plugin detection
-			if (javascriptInfo.mimeTypes && javascriptInfo.mimeTypes.length > 0) {
+			if (this.javascriptInfo.mimeTypes && this.javascriptInfo.mimeTypes.length > 0) {
 				for (i in pluginMap) {
-					mimeType = Util.findFirstItemInArray(javascriptInfo.mimeTypes, "type", pluginMap[i]);
+					mimeType = Util.findFirstItemInArray(this.javascriptInfo.mimeTypes, "type", pluginMap[i]);
 					features[i] = (mimeType && mimeType.enabledPlugin) ? '1' : '0';
 				}
 			}
 			
 			// Safari and Opera
 			// IE6/IE7 navigator.javaEnabled can't be aliased, so test directly
-			features.java = javascriptInfo.java;
+			features.java = this.javascriptInfo.java;
 			
 			// Firefox
-			features.gears = javascriptInfo.gears;
+			features.gears = this.javascriptInfo.gears;
 			
 			// Other browser features
-			features.res = javascriptInfo.res;
-			features.cd = javascriptInfo.cd;
-			features.cookie = javascriptInfo.cookie;
+			features.res = this.javascriptInfo.res;
+			features.cd = this.javascriptInfo.cd;
+			features.cookie = this.javascriptInfo.cookie;
 			
 			return features;
 		};
@@ -605,12 +602,12 @@ package com.snowplowanalytics.snowplow.tracker
 		* or when there is a new visit or a new page view
 		*/
 		public function setDomainUserIdCookie(_domainUserId:String, createTs:String, visitCount:String, nowTs:String, lastVisitTs:String, sessionId:String):void {
-			if (localCookies != null) {
-				localCookies.setLocal(getSnowplowCookieName('id'), 
+			if (this.localCookies != null) {
+				this.localCookies.setLocal(getSnowplowCookieName('id'),
 					_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs + '.' + sessionId, 
-					configVisitorCookieTimeout, 
-					configCookiePath, 
-					configStorageDomain);
+					this.configVisitorCookieTimeout,
+					this.configCookiePath,
+					this.configStorageDomain);
 			}
 		}
 		
@@ -619,19 +616,20 @@ package com.snowplowanalytics.snowplow.tracker
 		 * or when there is a new visit or a new page view
 		 */
 		public function setDomainUserIdSharedObject(_domainUserId:String, createTs:String, visitCount:String, nowTs:String, lastVisitTs:String, currentSessionId:String, previousSessionId: String):void {
-			if (localSharedObject != null) {
-				localSharedObject.setLocal(getSnowplowSharedObjectName('id'), 
+			if (this.localSharedObject != null) {
+				this.localSharedObject.setLocal(getSnowplowSharedObjectName('id'),
 					_domainUserId + '.' + createTs + '.' + visitCount + '.' + nowTs + '.' + lastVisitTs + '.' + currentSessionId + '.' + previousSessionId);
 			}
 		}
 		
 		/**
 		* Load visitor ID cookie
+		 * FIXME: return null when cookies are disabled
 		*/
 		public function loadDomainUserIdCookie():Array {
 			var now:Date = new Date();
 			var	nowTs:Number = Math.round(now.getTime() / 1000);
-			var	id:String = localCookies == null ? null : localCookies.getLocal('id');
+			var	id:String = this.localCookies == null ? null : this.localCookies.getLocal(getSnowplowCookieName('id'));
 			var	tmpContainer:Array;
 			
 			if (id) {
@@ -641,15 +639,15 @@ package com.snowplowanalytics.snowplow.tracker
 			} else {
 				// Domain - generate a pseudo-unique ID to fingerprint this user;
 
-				if (!domainUserId) {
-					domainUserId = UUID.generateGuid();
+				if (!this.domainUserId) {
+					this.domainUserId = UUID.generateGuid();
 				}
 				
 				tmpContainer = [
 					// New visitor
 					'1',
 					// Domain user ID
-					domainUserId,
+					this.domainUserId,
 					// Creation timestamp - seconds since Unix epoch
 					nowTs,
 					// visitCount - 0 = no previous visit
@@ -671,7 +669,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public function loadDomainUserIdSharedObject():Array {
 			var now:Date = new Date();
 			var	nowTs:Number = Math.round(now.getTime() / 1000);
-			var	id:String = localSharedObject == null ? null : localSharedObject.getLocal('id');
+			var	id:String = this.localSharedObject == null ? null : this.localSharedObject.getLocal(getSnowplowSharedObjectName('id'));
 			var	tmpContainer:Array;
 			
 			if (id) {
@@ -681,15 +679,15 @@ package com.snowplowanalytics.snowplow.tracker
 			} else {
 				// Domain - generate a pseudo-unique ID to fingerprint this user;
 				
-				if (!domainUserId) {
-					domainUserId = UUID.generateGuid();
+				if (!this.domainUserId) {
+					this.domainUserId = UUID.generateGuid();
 				}
 				
 				tmpContainer = [
 					// New visitor
 					'1',
 					// Domain user ID
-					domainUserId,
+					this.domainUserId,
 					// Creation timestamp - seconds since Unix epoch
 					nowTs,
 					// visitCount - 0 = no previous visit
@@ -723,7 +721,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param string userId The business-defined user ID
 		 */
 		public function setUserId (userId:String):void {
-			businessUserId = userId;
+			this.businessUserId = userId;
 		}
 		
 		/**
@@ -733,7 +731,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 */
 		public function setUserIdFromLocation (querystringField:String):void {
 			try { 
-				businessUserId = ExternalInterface.call("fromQuerystring", querystringField, javascriptInfo.pageUrl); }
+				this.businessUserId = ExternalInterface.call("fromQuerystring", querystringField, javascriptInfo.pageUrl); }
 			catch(e:Error) { }				
 		}
 		
@@ -744,7 +742,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 */
 		public function setUserIdFromReferrer (querystringField:String):void {
 			try { 
-				businessUserId = ExternalInterface.call("fromQuerystring", querystringField, javascriptInfo.referrer); }
+				this.businessUserId = ExternalInterface.call("fromQuerystring", querystringField, javascriptInfo.referrer); }
 			catch(e:Error) { }				
 		}
 		
@@ -754,7 +752,7 @@ package com.snowplowanalytics.snowplow.tracker
 		 * @param string storageName Name of the storage whose value will be assigned to businessUserId
 		 */
 		public function setUserIdFromStorage (storageName:String):void {
-			businessUserId = localBoth == null ? null : localBoth.getLocal(storageName);
+			this.businessUserId = localBoth == null ? null : localBoth.getLocal(storageName);
 		}
 		
 		/**
@@ -775,24 +773,24 @@ package com.snowplowanalytics.snowplow.tracker
 		public function detectJavascriptSignature (hashSeed:Number):Number {
 			
 			var fingerprint:Array = [
-				javascriptInfo.userAgent,
-				javascriptInfo.res + 'x' + javascriptInfo.cd,
+				this.javascriptInfo.userAgent,
+				this.javascriptInfo.res + 'x' + this.javascriptInfo.cd,
 				( new Date() ).getTimezoneOffset(),
-				javascriptInfo.hasSessionStorage,
-				javascriptInfo.hasLocalStorage
+				this.javascriptInfo.hasSessionStorage,
+				this.javascriptInfo.hasLocalStorage
 			];
 			
 			var plugins:Array = [];
-			if (javascriptInfo.plugins)
+			if (this.javascriptInfo.plugins)
 			{
-				for(var i:int = 0; i < javascriptInfo.plugins.length; i++)
+				for(var i:int = 0; i < this.javascriptInfo.plugins.length; i++)
 				{
 					var mt:Array = [];
-					for(var j:int = 0; j < javascriptInfo.plugins[i].length; j++)
+					for(var j:int = 0; j < this.javascriptInfo.plugins[i].length; j++)
 					{
-						mt.push([javascriptInfo.plugins[i][j].type, javascriptInfo.plugins[i][j].suffixes]);
+						mt.push([this.javascriptInfo.plugins[i][j].type, this.javascriptInfo.plugins[i][j].suffixes]);
 					}
-					plugins.push([javascriptInfo.plugins[i].name + "::" + javascriptInfo.plugins[i].description, mt.join("~")]);
+					plugins.push([this.javascriptInfo.plugins[i].name + "::" + this.javascriptInfo.plugins[i].description, mt.join("~")]);
 				}
 			}
 			return Util.murmurhash3_32_gc(fingerprint.join("###") + "###" + plugins.sort().join(";"), hashSeed);
@@ -868,75 +866,62 @@ package com.snowplowanalytics.snowplow.tracker
 		*/
 		public function addBrowserData(payload:IPayload, flashPayload:IPayload, clientSessionPayload:IPayload):void {
 			var nowTs:String = Math.round(new Date().getTime() / 1000).toString();
-			var	idname:String = getSnowplowCookieName('id');
-			var	sesname:String = getSnowplowCookieName('ses');
-			var	ses:String = getSnowplowCookieValue('ses'); // aka cookie.cookie(sesname)
+			var	sesName:String = getSnowplowCookieName('ses');
+			var	sessionId:String = getSnowplowCookieValue('ses'); // aka cookie.cookie(sesName)
 
 			var	cookieId:Array = loadDomainUserIdCookie();
-			var	cookieDomainUserId:String = cookieId[1]; // We could use the global (domainUserId) but this is better etiquette
 			var cookieCreateTs:String = cookieId[2];
 			var cookieVisitCount:Number = parseInt(cookieId[3]);
 			var cookieCurrentVisitTs:String = cookieId[4];
 			var cookieLastVisitTs:String = cookieId[5];
-			var cookieSessionId:String = cookieId[6];
 			
 			var	sharedObjectId:Array = loadDomainUserIdSharedObject();
-			var	sharedObjectDomainUserId:String = sharedObjectId[1]; // We could use the global (domainUserId) but this is better etiquette
 			var sharedObjectCreateTs:String = sharedObjectId[2];
 			var sharedObjectVisitCount:Number = parseInt(sharedObjectId[3]);
 			var sharedObjectCurrentVisitTs:String = sharedObjectId[4];
 			var sharedObjectLastVisitTs:String = sharedObjectId[5];
 			var sharedObjectCurrentSessionId:String = sharedObjectId[6];
 			var sharedObjectPreviousSessionId:String = sharedObjectId[7];
-			
+
 			// New session?
-			if (!ses) {
-				// New session (aka new visit), swap the current to previous.
+			if (!sessionId) {
+				// New session (aka new visit), update previous session id.
 				sharedObjectPreviousSessionId = sharedObjectCurrentSessionId;
 				// Create new sessionId
-				cookieSessionId = UUID.generateGuid();
-				sharedObjectCurrentSessionId = cookieSessionId;
-				cookieVisitCount++;
-				// Update the last visit timestamp
-				cookieLastVisitTs = cookieCurrentVisitTs;
-			} else {
-				sharedObjectCurrentSessionId = cookieSessionId;
+				sessionId = UUID.generateGuid();
+                sharedObjectCurrentSessionId = sessionId;
+                // Update the last visit timestamp
+                cookieLastVisitTs = cookieCurrentVisitTs;
 			}
-			
+
+            cookieVisitCount++;
 			sharedObjectVisitCount++;
 			
 			// Build out the rest of the request
 			payload.add(Parameter.VIEWPORT, detectViewport());
 			payload.add(Parameter.DOCUMENT_SIZE, detectDocumentSize());
 			payload.add(Parameter.VISIT_COUNT, isNaN(cookieVisitCount) ? "0" :  cookieVisitCount.toString());
-			payload.add(Parameter.DOMAIN_USER_ID, cookieDomainUserId); // Set to our local variable
-			payload.add(Parameter.USER_FINGERPRINT, cookieUserFingerprint.toString());
-			payload.add(Parameter.UID, businessUserId);
+			payload.add(Parameter.DOMAIN_USER_ID, this.domainUserId); // Set to our local variable
+			payload.add(Parameter.USER_FINGERPRINT, this.cookieUserFingerprint.toString());
+			payload.add(Parameter.UID, this.businessUserId);
 			
 			flashPayload.add(Parameter.SHARED_OBJECT_VISIT_COUNT, sharedObjectVisitCount);
-			flashPayload.add(Parameter.SHARED_OBJECT_DOMAIN_USER_ID, sharedObjectDomainUserId);
-			flashPayload.add(Parameter.SHARED_OBJECT_USER_FINGERPRINT, sharedObjectUserFingerprint);
+			flashPayload.add(Parameter.SHARED_OBJECT_DOMAIN_USER_ID, this.domainUserId);
+			flashPayload.add(Parameter.SHARED_OBJECT_USER_FINGERPRINT, this.sharedObjectUserFingerprint);
 
-			// Set cookieDomainUserId or storageObjectDomainUserId based on storage mechanism
-			var _user_id:String;
-			if (this.storageMechanism == 'FLASH_LSO') {
-				_user_id = sharedObjectDomainUserId;
-			} else {
-				_user_id = cookieDomainUserId;
-			}
-			clientSessionPayload.add(Parameter.CLIENT_SESSION_USER_ID, _user_id);
+			clientSessionPayload.add(Parameter.CLIENT_SESSION_USER_ID, this.domainUserId);
 			clientSessionPayload.add(Parameter.CLIENT_SESSION_STORAGE_MECHANISM, this.storageMechanism);
-			clientSessionPayload.add(Parameter.CLIENT_SESSION_PREVIOUS_ID, sharedObjectPreviousSessionId);
+			clientSessionPayload.add(Parameter.CLIENT_SESSION_PREVIOUS_ID, sharedObjectPreviousSessionId); // will be null if LSO is not available
 			clientSessionPayload.add(Parameter.CLIENT_SESSION_ID, sharedObjectCurrentSessionId);
 			clientSessionPayload.add(Parameter.CLIENT_SESSION_INDEX, isNaN(cookieVisitCount) ? "0" :  cookieVisitCount.toString());
-			
-			// Update storage
-			setDomainUserIdSharedObject(sharedObjectDomainUserId, sharedObjectCreateTs, sharedObjectVisitCount.toString(), nowTs, sharedObjectLastVisitTs, sharedObjectCurrentSessionId, sharedObjectPreviousSessionId);
 
-			if (hasScriptAccess && allowCookies) {
-				setDomainUserIdCookie(cookieDomainUserId, cookieCreateTs, cookieVisitCount.toString(), nowTs, cookieLastVisitTs, cookieSessionId);
+			// Update storage
+			setDomainUserIdSharedObject(this.domainUserId, sharedObjectCreateTs, sharedObjectVisitCount.toString(), nowTs, sharedObjectLastVisitTs, sharedObjectCurrentSessionId, sharedObjectPreviousSessionId);
+
+			if (this.hasScriptAccess && this.allowCookies) {
+				setDomainUserIdCookie(this.domainUserId, cookieCreateTs, cookieVisitCount.toString(), nowTs, cookieLastVisitTs, sessionId);
 				// only use cookies for session.  flash local storage does not support a TTL.
-				CookieUtil.setCookie(sesname, '*', configSessionCookieTimeout, configCookiePath, configStorageDomain);
+				CookieUtil.setCookie(sesName, sessionId, this.configSessionCookieTimeout, this.configCookiePath, this.configStorageDomain);
 			}
 		}
 
