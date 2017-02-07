@@ -23,7 +23,6 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	
@@ -42,7 +41,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		 * @param protocol The protocol for the call. Either http or https. Defaults to protocol provided in the uri.
 		 * @param buffer Flag that enables buffering using LocalStorage.
 		 */
-		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, protocol:String = Parameter.PROTOCOL_AUTO,  buffering: Boolean = false) {
+		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, protocol:String = Parameter.PROTOCOL_AUTO, buffering: Boolean = false) {
 			//protocol is string. Enums and Comparision 
 			//See http://stackoverflow.com/questions/39506217/create-enum-in-actionscript-3-and-compare
 
@@ -50,35 +49,38 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 			
 			if (buffering) {
 				try {
-					_buffer = new LocalStorageBuffer();
-					bufferSize = BufferOption.BATCH;
+					this._buffer = new LocalStorageBuffer();
+					this.bufferSize = BufferOption.BATCH;
 				} catch (e:Error) {
+					trace("Error", e);
 					throw new EmitterError("Local storage is unavailable for Buffering");
 
 				}
 			} else {
-				_buffer = new InMemoryBuffer();
+				this._buffer = new InMemoryBuffer();
 			}
 
 			if (emitterProtocol.scheme == Parameter.PROTOCOL_AUTO) {
 				var protocolScheme:Array = uri.match("^(http|https)://");
 				if (protocolScheme) {
-					trace("Collector protocol is " + protocolScheme[0]);
+					trace("Collector protocol: " + protocolScheme[0]);
 				} else {
 					throw new EmitterError("Invalid protocol scheme provided in uri. Use http or https");
 				}
 			} else {
 				// Set http/https protocol in uri
-				uri = emitterProtocol.scheme + "://";
+				uri = emitterProtocol.scheme + "://" + uri;
 			}
 			
 			if (httpMethod == URLRequestMethod.GET) {
-				_uri = new URI(uri + "/i");
+				this._uri = new URI(uri + "/i");
 			} else { // POST
-				_uri = new URI(uri + "/" + Constants.PROTOCOL_VENDOR + "/" + Constants.PROTOCOL_VERSION);
+				this._uri = new URI(uri + "/" + Constants.PROTOCOL_VENDOR + "/" + Constants.PROTOCOL_VERSION);
 			}
 			
 			this.httpMethod = httpMethod;
+            trace("Collector URI: " + this._uri);
+            trace("Collector Method: " + httpMethod);
 		}
 		
 		/**
@@ -109,10 +111,10 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 				});
 			}
 			// Add payload to buffer
-			_buffer.push([payload]);
+			this._buffer.push(payload);
 
 			// Flush buffer if bufferSize is reached.
-			if (_buffer.size() >= bufferSize)
+			if (this._buffer.size() >= this.bufferSize)
 			{
 				flushBuffer();
 			}
@@ -125,7 +127,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 			if (totalCount == totalPayload) 
 			{
 				// Clear buffer since all payloads have been successfully sent
-				_buffer.clear();
+				this._buffer.clear();
 				if (unsentPayload.length == 0) 
 				{
 					dispatchEvent(new EmitterEvent(EmitterEvent.SUCCESS, successCount));
@@ -141,18 +143,18 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		 * Sends all events in the buffer to the collector.
 		 */
 		public function flushBuffer():void {
-			if (_buffer.size() == 0) {
+			if (this._buffer.size() == 0) {
 				trace("Buffer is empty, exiting flush operation");
 				return;
 			}
 			
-			var payloads:Array = _buffer.get();
+			var payloads:Array = this._buffer.get();
 			var unsentPayload:Array = [];
 
-			if (httpMethod == URLRequestMethod.GET) {
+			if (this.httpMethod == URLRequestMethod.GET) {
 				var successCount:int = 0;
 				var totalCount:int = 0;
-				var totalPayload:int = _buffer.length();
+				var totalPayload:int = this._buffer.length();
 
 				for each (var getPayload:IPayload in payloads) {
 					// Attach sent timestamp
@@ -163,14 +165,14 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 							totalCount++;
 							checkBufferComplete(successCount, totalCount, totalPayload, unsentPayload);
 						},
-						function onGetError ():void {
+						function onGetError (event:Event):void {
 							totalCount++;
 							unsentPayload.push(getPayload)
 							checkBufferComplete(successCount, totalCount, totalPayload, unsentPayload);
 						}
 					);
 				}
-			} else if (httpMethod == URLRequestMethod.POST) {
+			} else if (this.httpMethod == URLRequestMethod.POST) {
 				
 				var postPayload:SchemaPayload = new SchemaPayload();
 				postPayload.setSchema(Constants.SCHEMA_PAYLOAD_DATA);
@@ -203,17 +205,17 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 
 		protected function sendData(payload:IPayload, successCallback:Function, errorCallback:Function):void
 		{
-			if (httpMethod == URLRequestMethod.GET) {
+			if (this.httpMethod == URLRequestMethod.GET) {
 				sendGetData(payload, successCallback, errorCallback)
 			}
-			else if (httpMethod == URLRequestMethod.POST) {
+			else if (this.httpMethod == URLRequestMethod.POST) {
 				sendPostData(payload, successCallback, errorCallback)
 			}
 		}
 		
 		protected function sendPostData(payload:IPayload, successCallback:Function, errorCallback:Function):void
 		{
-			Util.getResponse(_uri.toString(), 
+			Util.getResponse(this._uri.toString(),
 				successCallback,
 				errorCallback, 
 				URLRequestMethod.POST,
@@ -223,9 +225,9 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		protected function sendGetData(payload:IPayload, successCallback:Function, errorCallback:Function):void 
 		{
 			var hashMap:Object = payload.getMap();
-			_uri.setQueryByMap(hashMap);
+			this._uri.setQueryByMap(hashMap);
 			
-			Util.getResponse(_uri.toString(), 
+			Util.getResponse(this._uri.toString(),
 				successCallback,
 				errorCallback);
 		}
