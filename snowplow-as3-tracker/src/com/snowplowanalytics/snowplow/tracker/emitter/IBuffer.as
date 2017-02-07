@@ -13,34 +13,35 @@
 
 package com.snowplowanalytics.snowplow.tracker.emitter
 {
+    import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
 
-  public interface IBuffer
-  {
-    /**
-     * Returns the buffer content as an Array
-     * @returns A Buffer
-     */
-    function get():Array;
+    public interface IBuffer
+    {
+        /**
+         * Returns the buffer content as an Array
+         * @returns A Buffer
+         */
+        function get():Array;
 
-    /**
-     * Add payload to buffer.
-     * @param Array of IPayloads
-     */
-    function push(payload: Array):void;
+        /**
+         * Add payload to buffer.
+         * @param IPayloads
+         */
+        function push(payload: IPayload):void;
 
-    /**
-     * Returns the number of items in buffer
-     */
-     function length():int;
+        /**
+         * Returns the number of items in buffer
+         */
+         function length():int;
 
-     /**
-     * Return the byte size of the buffer
-     */
-     function size():int;
+         /**
+         * Return the byte size of the buffer
+         */
+         function size():int;
 
-    /**
-     * Clears the buffer.
-     */
-     function clear():void;
-  }
+        /**
+         * Clears the buffer.
+         */
+         function clear():void;
+    }
 }

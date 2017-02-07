@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016 Snowplow Analytics Ltd. All rights reserved.
+* Copyright (c) 2017 Snowplow Analytics Ltd. All rights reserved.
 *
 * This program is licensed to you under the Apache License Version 2.0,
 * and you may not use this file except in compliance with the Apache License Version 2.0.
@@ -13,46 +13,45 @@
 
 package com.snowplowanalytics.snowplow.tracker.emitter
 {
-  import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
+    import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
   
-  public class InMemoryBuffer implements IBuffer
-  {
-
-    private var buffer:Array;
-
-    public function InMemoryBuffer()
+    public class InMemoryBuffer implements IBuffer
     {
-      this.buffer = [];
-    }
+        private var buffer:Array;
 
-    public function get():Array
-    {
-      return this.buffer;
-    }
+        public function InMemoryBuffer()
+        {
+            this.buffer = [];
+        }
 
-    public function push(payload: Array):void
-    {
-      this.buffer.concat(payload);
-      return;
-    }
+        public function get():Array
+        {
+            return this.buffer;
+        }
 
-    public function length():int
-    {
-      return this.buffer.length;
-    }
+        public function push(payload: IPayload):void
+        {
+            this.buffer.push(payload);
+            return;
+        }
 
-    public function size():int
-    {
-      var _size: int = 0;
-      for each (var payload:IPayload in this.buffer) {
-        _size += payload.size();
-      }
-      return _size;
-    }
+        public function length():int
+        {
+            return this.buffer.length;
+        }
 
-    public function clear():void
-    {
-      this.buffer =  [];
+        public function size():int
+        {
+            var _size: int = 0;
+            for each (var payload:IPayload in this.buffer) {
+                _size += payload.size();
+            }
+            return _size;
+        }
+
+        public function clear():void
+        {
+            this.buffer =  [];
+        }
     }
-  }
 }

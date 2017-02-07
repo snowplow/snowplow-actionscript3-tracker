@@ -13,58 +13,58 @@
 
 package com.snowplowanalytics.snowplow.tracker.emitter
 {
-  import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
+    import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
 
-  import flash.net.SharedObject;
+    import flash.net.SharedObject;
 
-  public class LocalStorageBuffer implements IBuffer
-  {
-
-    private var buffer:SharedObject;
-    private var SHARED_OBJECT_BUFFER_NAME:String = "com.snowplowanalytics.snowplow-as3-tracker.buffer";
-
-    public function LocalStorageBuffer()
+    public class LocalStorageBuffer implements IBuffer
     {
-      this.buffer = SharedObject.getLocal(SHARED_OBJECT_BUFFER_NAME);
-      this.buffer[SHARED_OBJECT_BUFFER_NAME] = [];
-    }
+        private var buffer:SharedObject;
+        private var SHARED_OBJECT_BUFFER_NAME:String = "com.snowplow.buffer";
 
-    public function get():Array
-    {
-      return this.buffer.data[SHARED_OBJECT_BUFFER_NAME];
-    }
+        public function LocalStorageBuffer()
+        {
+            this.buffer = SharedObject.getLocal(SHARED_OBJECT_BUFFER_NAME);
+            this.buffer.data["queue"] = [];
+            this.buffer.flush();
+        }
 
-    public function push(payload: Array):void
-    {
-      var _q:Array = this.buffer.data[SHARED_OBJECT_BUFFER_NAME];
-      if (_q == null)
-      {
-        _q = [];
-      }
-      _q.concat(payload)
-      this.buffer.data[SHARED_OBJECT_BUFFER_NAME] = _q;
-      this.buffer.flush();
-    }
+        public function get():Array
+        {
+            return this.buffer.data["queue"];
+        }
 
-    public function length():int
-    {
-      return this.buffer.data[SHARED_OBJECT_BUFFER_NAME].length;
-    }
+        public function push(payload: IPayload):void
+        {
+            var _q:Array = this.buffer.data["queue"];
+            if (_q == null)
+            {
+              _q = [];
+            }
+            _q.push(payload);
+            this.buffer.data["queue"] = _q;
+            this.buffer.flush();
+        }
 
-    public function size():int
-    {
-      var _data:Array = this.buffer.data[SHARED_OBJECT_BUFFER_NAME];
-      var _size: int = 0;
-      for each (var payload:IPayload in _data) {
-        _size += payload.size();
-      }
-      return _size;
-    }
+        public function length():int
+        {
+            return this.buffer.data["queue"].length;
+        }
 
-    public function clear():void
-    {
-      this.buffer.data[SHARED_OBJECT_BUFFER_NAME] = [];
-      this.buffer.flush();
+        public function size():int
+        {
+            var _data:Array = this.buffer.data["queue"];
+            var _size: int = 0;
+            for each (var payload:IPayload in _data) {
+                _size += payload.size();
+            }
+            return _size;
+        }
+
+        public function clear():void
+        {
+            this.buffer.data["queue"] = [];
+            this.buffer.flush();
+        }
     }
-  }
 }
