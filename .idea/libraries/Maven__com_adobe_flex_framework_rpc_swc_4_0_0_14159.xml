@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.adobe.flex.framework:rpc:swc:4.0.0.14159" type="flex">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/adobe/flex/framework/rpc/4.0.0.14159/rpc-4.0.0.14159.swc!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/adobe/flex/framework/rpc/4.0.0.14159/rpc-4.0.0.14159-asdoc.zip!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/adobe/flex/framework/rpc/4.0.0.14159/rpc-4.0.0.14159-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
