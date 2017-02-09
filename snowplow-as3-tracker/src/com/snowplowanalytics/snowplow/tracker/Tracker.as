@@ -906,7 +906,8 @@ package com.snowplowanalytics.snowplow.tracker
 			payload.add(Parameter.SESSION_ID, memorizedSessionId);
 			payload.add(Parameter.DOMAIN_USER_ID, cookieDomainUserId); // Set to our local variable
 			payload.add(Parameter.USER_FINGERPRINT, cookieUserFingerprint.toString());
-			payload.add(Parameter.UID, businessUserId);
+			payload.add(Parameter.UID, businessUserId); 
+			payload.add(Parameter.USERAGENT, javascriptInfo.userAgent);
 			
 			flashPayload.add(Parameter.SHARED_OBJECT_VISIT_COUNT, sharedObjectVisitCount);
 			flashPayload.add(Parameter.SHARED_OBJECT_DOMAIN_USER_ID, sharedObjectDomainUserId); // Set to our local variable

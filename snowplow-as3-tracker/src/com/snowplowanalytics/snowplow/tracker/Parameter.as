@@ -44,6 +44,7 @@ package com.snowplowanalytics.snowplow.tracker
 		public static const COLOR_DEPTH:String = "cd";
 		public static const TIMEZONE:String = "tz";
 		public static const LANGUAGE:String = "lang";
+		public static const USERAGENT:String = "ua";
 
 		//Flash specific subject
 		public static const SHARED_OBJECT_VISIT_COUNT:String = "domainSessionIndex";
