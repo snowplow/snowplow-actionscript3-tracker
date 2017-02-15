@@ -90,6 +90,8 @@ package
 		[Test]
 		public function testTrackPageViewPost():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+			//set to batch, http requests aren't fired
+			emitter.setBufferSize(BufferOption.BATCH);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
@@ -107,20 +109,19 @@ package
 			contextList.push(context);
 			
 			tracker.trackPageView("www.mypage.com", "My Page", "www.me.com", contextList);
-			
-			emitter.flushBuffer();
 		}
 		
 		[Test]
 		public function testTrackPageViewPostBase64():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -131,20 +132,19 @@ package
 			contextList.push(context);
 			
 			tracker.trackPageView("www.mypage.com", "My Page", "www.me.com", contextList);
-			
-			emitter.flushBuffer();
 		}		
 		
 		[Test]
 		public function testTrackPageViewGet():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -155,20 +155,19 @@ package
 			contextList.push(context);
 			
 			tracker.trackPageView("www.mypage.com", "My Page", "www.me.com", contextList);
-			
-			emitter.flushBuffer();
 		}
 		
 		[Test]
 		public function testTrackPageViewGetBase64():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, true);
 			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -179,8 +178,6 @@ package
 			contextList.push(context);
 			
 			tracker.trackPageView("www.mypage.com", "My Page", "www.me.com", contextList);
-			
-			emitter.flushBuffer();
 		}		
 	
 		[Test]
@@ -198,11 +195,11 @@ package
 			};*/
 			
 			var e:Emitter = new Emitter(testURL, URLRequestMethod.GET);
-			
+            e.setBufferSize(BufferOption.BATCH);
 			var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, false);
 
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -230,11 +227,12 @@ package
 			};
 */			
 			var e:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            e.setBufferSize(BufferOption.BATCH);
 
 			var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, false);
 			
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -262,11 +260,12 @@ package
 			};*/
 			
 			var e:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+            e.setBufferSize(BufferOption.BATCH);
 			
 			var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, true);
 			
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -294,11 +293,12 @@ package
 			};
 			*/			
 			var e:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            e.setBufferSize(BufferOption.BATCH);
 			
 			var t:Tracker = new Tracker(e, 'cf', 'cfe35', null, FlexGlobals.topLevelApplication.stage, true);
 			
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			var context:SchemaPayload = new SchemaPayload();
@@ -355,8 +355,9 @@ package
 		[Test]
 		public function testTrackSelfDescribingEvent():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, false);
-			var eventData:SchemaPayload = new SchemaPayload()
+			var eventData:SchemaPayload = new SchemaPayload();
 			eventData.add("temp", "100");
 			tracker.trackSelfDescribingEvent(eventData, null, 1479808724);
 		}
@@ -364,12 +365,12 @@ package
 		[Test]
 		public function testTrackEcommerceTransactionPost():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, false);
-			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
@@ -383,19 +384,17 @@ package
 			transactionItemLinkedList.push(transactionItem);
 			tracker.trackEcommerceTransaction("order-7", 25.0, "no_affiliate", 0.0, 0.0, "Dover",
 				"Delaware", "US", "USD", transactionItemLinkedList);
-			
-			emitter.flushBuffer();
 		}
 		
 		[Test]
 		public function testTrackEcommerceTransactionPostBase64():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, true);
-			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
@@ -409,19 +408,17 @@ package
 			transactionItemLinkedList.push(transactionItem);
 			tracker.trackEcommerceTransaction("order-7", 25.0, "no_affiliate", 0.0, 0.0, "Dover",
 				"Delaware", "US", "USD", transactionItemLinkedList);
-			
-			emitter.flushBuffer();
 		}
 		
 		[Test]
 		public function testTrackEcommerceTransactionGet():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, false);
-			//emitter.setRequestMethod(RequestMethod.Asynchronous);
+            emitter.setBufferSize(BufferOption.BATCH);
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
@@ -435,19 +432,17 @@ package
 			transactionItemLinkedList.push(transactionItem);
 			tracker.trackEcommerceTransaction("order-7", 25.0, "no_affiliate", 0.0, 0.0, "Dover",
 				"Delaware", "US", "USD", transactionItemLinkedList);
-			
-			emitter.flushBuffer();
 		}
 		
 		[Test]
 		public function testTrackEcommerceTransactionGetBase64():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", null, FlexGlobals.topLevelApplication.stage, true);
-			//emitter.setRequestMethod(RequestMethod.Asynchronous);
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
@@ -461,8 +456,6 @@ package
 			transactionItemLinkedList.push(transactionItem);
 			tracker.trackEcommerceTransaction("order-7", 25.0, "no_affiliate", 0.0, 0.0, "Dover",
 				"Delaware", "US", "USD", transactionItemLinkedList);
-			
-			emitter.flushBuffer();
 		}
 		
 		[Test]
@@ -483,15 +476,14 @@ package
 		[Test]
 		public function testTrackScreenViewPost():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
-			//emitter.setRequestMethod(RequestMethod.Asynchronous);
-			//emitter.setBufferOption(BufferOption.Instant);
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
@@ -505,15 +497,14 @@ package
 		[Test]
 		public function testTrackScreenViewPostBase64():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, true);
-			//emitter.setRequestMethod(RequestMethod.Asynchronous);
-			//emitter.setBufferOption(BufferOption.Instant);
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
@@ -527,15 +518,14 @@ package
 		[Test]
 		public function testTrackScreenViewGet():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, false);
-			//emitter.setRequestMethod(RequestMethod.Asynchronous);
-			//emitter.setBufferOption(BufferOption.Instant);
 			
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");
@@ -549,15 +539,14 @@ package
 		[Test]
 		public function testTrackScreenViewGetBase64():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
+            emitter.setBufferSize(BufferOption.BATCH);
 			var subject:Subject = new Subject();
 			subject.setViewPort(320, 480);
 			var tracker:Tracker = new Tracker(emitter, "AF003", "cloudfront", subject, FlexGlobals.topLevelApplication.stage, true);
-			//emitter.setRequestMethod(RequestMethod.Asynchronous);
-			//emitter.setBufferOption(BufferOption.Instant);
-			
+
 			var context:SchemaPayload = new SchemaPayload();
 			var someContext:Object = {};
-			someContext["latitude"] = 31.778013
+			someContext["latitude"] = 31.778013;
 			someContext["longitude"] = 35.235379;
 			
 			context.setSchema("iglu:com.snowplowanalytics.snowplow/geolocation_context/jsonschema/1-0-0");

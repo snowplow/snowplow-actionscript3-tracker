@@ -14,30 +14,31 @@
 package com.snowplowanalytics.snowplow.tracker.emitter
 {
     import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
-  
-    public class InMemoryBuffer implements IBuffer
+
+    import flash.events.EventDispatcher;
+
+    public class InMemoryBuffer extends EventDispatcher implements IBuffer
     {
+        private var id:String;
         private var buffer:Array;
+        private var bufferSize:int;
 
-        public function InMemoryBuffer()
+        public function InMemoryBuffer(id:String, size:int)
         {
+            this.id = id;
+            this.bufferSize = size;
             this.buffer = [];
-        }
-
-        public function get():Array
-        {
-            return this.buffer;
         }
 
         public function push(payload: IPayload):void
         {
             this.buffer.push(payload);
+            if (this.size() >= this.bufferSize) {
+                var payloads:Array = this.buffer;
+                this.clear();
+                dispatchEvent(new BufferEvent(BufferEvent.FULL, this.id, payloads));
+            }
             return;
-        }
-
-        public function length():int
-        {
-            return this.buffer.length;
         }
 
         public function size():int

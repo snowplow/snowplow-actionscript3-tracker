@@ -17,9 +17,10 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 	import com.snowplowanalytics.snowplow.tracker.Constants;
 	import com.snowplowanalytics.snowplow.tracker.Parameter;
 	import com.snowplowanalytics.snowplow.tracker.Util;
-	import com.snowplowanalytics.snowplow.tracker.event.EmitterEvent;
+    import com.snowplowanalytics.snowplow.tracker.event.EmitterEvent;
 	import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
 	import com.snowplowanalytics.snowplow.tracker.payload.SchemaPayload;
+	import com.snowplowanalytics.snowplow.tracker.emitter.BufferEvent;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -30,40 +31,27 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 	{
 		private var _uri:URI;
 		private var _buffer:IBuffer;
-		
-		protected var bufferSize:int = BufferOption.DEFAULT;
-		protected var httpMethod:String = URLRequestMethod.GET;
+        private var _retryBuffer:IBuffer;
+        private var bufferingEnabled:Boolean;
+		private var bufferSize:int;
+		private var httpMethod:String = URLRequestMethod.GET;
 		
 		/**
 		 * Create an Emitter instance with a collector URL and HttpMethod to send requests.
 		 * @param URI The collector URI.
 		 * @param httpMethod The HTTP request method.
 		 * @param protocol The protocol for the call. Either http or https. Defaults to protocol provided in the uri.
-		 * @param buffer Flag that enables buffering using LocalStorage.
+		 * @param bufferingEnabled Flag that enables buffering using LocalStorage.
 		 */
-		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, protocol:String = Parameter.PROTOCOL_AUTO, buffering: Boolean = false) {
+		public function Emitter(uri:String, httpMethod:String = URLRequestMethod.GET, protocol:String = Parameter.PROTOCOL_AUTO, bufferingEnabled:Boolean = false) {
 			//protocol is string. Enums and Comparision 
 			//See http://stackoverflow.com/questions/39506217/create-enum-in-actionscript-3-and-compare
 
 			var emitterProtocol:EmitterProtocol = new EmitterProtocol(protocol);
-			
-			if (buffering) {
-				try {
-					this._buffer = new LocalStorageBuffer();
-					this.bufferSize = BufferOption.BATCH;
-				} catch (e:Error) {
-					trace("Error", e);
-					throw new EmitterError("Local storage is unavailable for Buffering");
-
-				}
-			} else {
-				this._buffer = new InMemoryBuffer();
-			}
 
 			if (emitterProtocol.scheme == Parameter.PROTOCOL_AUTO) {
 				var protocolScheme:Array = uri.match("^(http|https)://");
 				if (protocolScheme) {
-					trace("Collector protocol: " + protocolScheme[0]);
 				} else {
 					throw new EmitterError("Invalid protocol scheme provided in uri. Use http or https");
 				}
@@ -79,10 +67,16 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 			}
 			
 			this.httpMethod = httpMethod;
-            trace("Collector URI: " + this._uri);
-            trace("Collector Method: " + httpMethod);
+            this.bufferingEnabled = bufferingEnabled;
+
+            //Setup buffers
+            this.setBufferSize(BufferOption.DEFAULT);
+
+			//Attach event handlers to flush buffer
+			this._buffer.addEventListener(BufferEvent.FULL, flushBuffer);
+            this._retryBuffer.addEventListener(BufferEvent.FULL, flushBuffer)
 		}
-		
+
 		/**
 		 * Sets whether the buffer should send events instantly or after the buffer has reached
 		 * it's limit. By default, this is set to BufferOption Default.
@@ -90,6 +84,22 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		 */
 		public function setBufferSize(option:int):void {
 			this.bufferSize = option;
+            // setup the buffers
+            if (this.bufferingEnabled) {
+                try {
+                    this._buffer = new LocalStorageBuffer("PRIMARY_BUFFER", this.bufferSize);
+                    this._retryBuffer= new LocalStorageBuffer("RETRY_BUFFER", this.bufferSize);
+                } catch (e:Error) {
+                    trace("Error", e);
+                    trace("LocalStorage is not available. Using InMemoryBuffer")
+                    this._buffer = new InMemoryBuffer("PRIMARY_BUFFER", this.bufferSize);
+                    this._retryBuffer = new InMemoryBuffer("RETRY_BUFFER", this.bufferSize);
+                }
+            } else {
+                //Add buffer size for event bufferFull
+                this._buffer = new InMemoryBuffer("PRIMARY_BUFFER", this.bufferSize);
+                this._retryBuffer = new InMemoryBuffer("RETRY_BUFFER", this.bufferSize);
+            }
 		}
 
 		/**
@@ -98,7 +108,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		 */
 		public function addToBuffer(payload:IPayload):void {
 			// If payload is > 50000 bytes do not add to buffer, instead fire and forget.
-			if (payload.size() > 50000)
+			if (payload.size() > BufferOption.BATCH)
 			{
 			  sendData(payload,
 					function onSendSuccess (data:*):void 
@@ -112,28 +122,28 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 			}
 			// Add payload to buffer
 			this._buffer.push(payload);
-
-			// Flush buffer if bufferSize is reached.
-			if (this._buffer.size() >= this.bufferSize)
-			{
-				flushBuffer();
-			}
+            return;
 		}
 
 		/**
 		 * Sends all events in the buffer to the collector.
 		 */
-		public function checkBufferComplete(successCount:int, totalCount:int, totalPayload:int, unsentPayload:Array):void {
+		public function checkBufferComplete(bufferId:String, successCount:int, totalCount:int, totalPayload:int, unsentPayload:Array):void {
 			if (totalCount == totalPayload) 
 			{
 				// Clear buffer since all payloads have been successfully sent
-				this._buffer.clear();
 				if (unsentPayload.length == 0) 
 				{
 					dispatchEvent(new EmitterEvent(EmitterEvent.SUCCESS, successCount));
 				} 
 				else 
 				{
+                    //Retry only from primary buffer
+                    if (bufferId == 'PRIMARY_BUFFER') {
+                        for each (var payload:IPayload in unsentPayload) {
+                            this._retryBuffer.push(payload)
+                        }
+                    }
 					dispatchEvent(new EmitterEvent(EmitterEvent.FAILURE, successCount, unsentPayload, "Not all items in buffer were sent"));
 				}
 			}
@@ -142,19 +152,15 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 		/**
 		 * Sends all events in the buffer to the collector.
 		 */
-		public function flushBuffer():void {
-			if (this._buffer.size() == 0) {
-				trace("Buffer is empty, exiting flush operation");
-				return;
-			}
-			
-			var payloads:Array = this._buffer.get();
+		public function flushBuffer(ev:BufferEvent):void {
+            var bufferId:String = ev.bufferId;
+            var payloads:Array = ev.payloads;
 			var unsentPayload:Array = [];
 
 			if (this.httpMethod == URLRequestMethod.GET) {
 				var successCount:int = 0;
 				var totalCount:int = 0;
-				var totalPayload:int = this._buffer.length();
+				var totalPayload:int = payloads.length;
 
 				for each (var getPayload:IPayload in payloads) {
 					// Attach sent timestamp
@@ -163,12 +169,12 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 						function onGetSuccess (data:*):void {
 							successCount++;
 							totalCount++;
-							checkBufferComplete(successCount, totalCount, totalPayload, unsentPayload);
+							checkBufferComplete(bufferId, successCount, totalCount, totalPayload, unsentPayload);
 						},
 						function onGetError (event:Event):void {
 							totalCount++;
-							unsentPayload.push(getPayload)
-							checkBufferComplete(successCount, totalCount, totalPayload, unsentPayload);
+							unsentPayload.push(getPayload);
+							checkBufferComplete(bufferId, successCount, totalCount, totalPayload, unsentPayload);
 						}
 					);
 				}
@@ -190,13 +196,14 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 				sendPostData(postPayload,
 					function onPostSuccess (data:*):void 
 					{
-						_buffer.clear();
-						dispatchEvent(new EmitterEvent(EmitterEvent.SUCCESS, _buffer.length()));
+						dispatchEvent(new EmitterEvent(EmitterEvent.SUCCESS, payloads.length));
 					},
 					function onPostError (event:Event):void 
 					{
-						_buffer.clear();
-						unsentPayload.push(postPayload);
+                        //Push to retry buffer only from the primary
+                        if (bufferId == 'PRIMARY_BUFFER') {
+                            this._retryBuffer.push(postPayload);
+                        }
 						dispatchEvent(new EmitterEvent(EmitterEvent.FAILURE, 0, unsentPayload, event.toString()));
 					}
 				);

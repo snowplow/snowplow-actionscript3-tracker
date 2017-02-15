@@ -16,19 +16,34 @@ package
 	import com.snowplowanalytics.snowplow.tracker.emitter.BufferOption;
 	import com.snowplowanalytics.snowplow.tracker.emitter.Emitter;
 	import com.snowplowanalytics.snowplow.tracker.emitter.EmitterError;
-	import com.snowplowanalytics.snowplow.tracker.event.EmitterEvent;
 	import com.snowplowanalytics.snowplow.tracker.payload.TrackerPayload;
-	
-	import flash.net.URLRequestMethod;
-	
-	import flexunit.framework.Assert;
-	
-	import org.flexunit.async.Async;
-	
+
+    import flash.events.Event;
+    import flash.net.URLRequest;
+
+    import flash.net.URLRequestMethod;
+
+    import org.flexunit.Assert;
+    import org.flexunit.async.Async;
+//    import mockolate.partial;
+//    import mockolate.prepare;
+//    import mockolate.stub;
+//    import org.hamcrest.core.anything;
+
+
 	public class EmitterTest
 	{
 		private static var testURL:String = "https://astracker.snplow.com";
-		private var callCompleted:Boolean = false;
+
+
+//            [Before(async, timeout=5000)]
+//            public function prepareMockolates():void
+//            {
+//                Async.proceedOnEvent(this,
+//                        prepare(Emitter),
+//                        Event.COMPLETE);
+//            }
+
 		private var testPayloadData:Object = {
 			"schema":"iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-0",
 			"data":[
@@ -50,8 +65,8 @@ package
 				}
 			]
 		};
-		
-		
+
+
 		[Test]
 		public function testEmitterConstructor():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
@@ -95,104 +110,41 @@ package
 		[Test]
 		public function testFlushGet():void {
 			var emitter:Emitter = new Emitter(testURL);
-			
+            emitter.setBufferSize(BufferOption.BATCH);
+
 			var payload:TrackerPayload = new TrackerPayload();
 			payload.addMap(testPayloadData);
-			
+
 			emitter.addToBuffer(payload);
-			
-			emitter.flushBuffer();
 		}
 		
 		[Test]
 		public function testFlushPost():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.POST);
+            emitter.setBufferSize(BufferOption.BATCH);
 			
 			var payload:TrackerPayload;
 			payload = new TrackerPayload();
 			payload.addMap(testPayloadData);
 			
 			emitter.addToBuffer(payload);
-			
-			emitter.flushBuffer();
+
 		}
 		
 		[Test]
 		public function testBufferOption():void {
 			var emitter:Emitter = new Emitter(testURL);
-			emitter.setBufferSize(BufferOption.DEFAULT);
-		}
-		
-		private function onSuccess(successCount:int):void {
-			trace("Buffer length for POST/GET:" + successCount);
-			Assert.assertTrue(successCount > 0);
-		}
-
-		/*
-		private function handleTimeout(passThroughData:Object):void {
-			if (!callCompleted) {
-				Assert.fail( "Timeout reached before event");          
-			}
-		}
-		*/
-		
-		[Test()]
-		public function testFlushBuffer():void {
-			/*
-			var timeout:int = 500;
-			callCompleted = false;
-			
-			var onSuccess:Function = Async.asyncHandler(this, 
-				function (event:EmitterEvent, passThroughData:Object):void {
-					callCompleted = true;
-					trace("Buffer length for POST/GET:" + event.successCount);
-					Assert.assertTrue(event.successCount > 0);
-				}, 
-				timeout, 
-				null, 
-				handleTimeout 
-			);
-			
-			var onFailure:Function = Async.asyncHandler(this, 
-				function (event:EmitterEvent, passThroughData:Object):void {
-					callCompleted = true;
-					trace("Failure, successCount: " + event.successCount +
-						"\nerrorInfo:\n" + event.errorInfo +
-						"\nfailedEvent:\n" + event.toString());
-					Assert.fail( "An error occured flushing the buffer.");   
-				}, 
-				timeout, 
-				null, 
-				handleTimeout 
-			);
-			*/
-			var emitter:Emitter = new Emitter(testURL, 
-				URLRequestMethod.GET
-			);
-			
-			//emitter.addEventListener(EmitterEvent.SUCCESS, onSuccess);
-			//emitter.addEventListener(EmitterEvent.FAILURE, onFailure);
-			
-			
-			for (var i:int=0; i < 5; i++) {
-				var payload:TrackerPayload;
-				payload = new TrackerPayload();
-				payload.addMap(testPayloadData);
-				
-				emitter.addToBuffer(payload);
-			}
-			emitter.flushBuffer();
+			emitter.setBufferSize(BufferOption.BATCH);
 		}
 		
 		[Test]
 		public function testMaxBuffer():void {
 			var emitter:Emitter = new Emitter(testURL, URLRequestMethod.GET);
-
+            emitter.setBufferSize(BufferOption.BATCH);
 			for (var i:int=0; i < 10; i++) {
 				var payload:TrackerPayload;
 				payload = new TrackerPayload();
 				payload.addMap(testPayloadData);
-				
 				emitter.addToBuffer(payload);
 			}
 		}
@@ -208,5 +160,23 @@ package
 			}
 		}
 
-	}
+//
+//        [Test]
+//        public function testMock():void {
+//            var emitter:Emitter = partial(Emitter, "mockedEmitter", [testURL, URLRequestMethod.GET, "https", true]);
+//            stub(emitter).method("addToBuffer")
+//                    .args(payload)
+//                    .returns(null)
+//                    .calls(function():void {
+//                        Assert.assertEquals(1,1);
+//                    });
+//            for (var i:int=0; i < 10; i++) {
+//                var payload:TrackerPayload;
+//                payload = new TrackerPayload();
+//                payload.addMap(testPayloadData);
+//				emitter.addToBuffer(payload);
+//            }
+//        }
+
+    }
 }

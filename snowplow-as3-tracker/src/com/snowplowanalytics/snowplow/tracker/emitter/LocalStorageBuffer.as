@@ -15,45 +15,46 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 {
     import com.snowplowanalytics.snowplow.tracker.payload.IPayload;
 
+    import flash.events.EventDispatcher;
     import flash.net.SharedObject;
 
-    public class LocalStorageBuffer implements IBuffer
+    public class LocalStorageBuffer extends EventDispatcher implements IBuffer
     {
-        private var buffer:SharedObject;
         private var SHARED_OBJECT_BUFFER_NAME:String = "com.snowplow.buffer";
 
-        public function LocalStorageBuffer()
-        {
-            this.buffer = SharedObject.getLocal(SHARED_OBJECT_BUFFER_NAME);
-            this.buffer.data["queue"] = [];
-            this.buffer.flush();
-        }
+        private var id:String;
+        private var buffer:SharedObject;
+        private var bufferSize:int;
 
-        public function get():Array
+        public function LocalStorageBuffer(id:String, size:int)
         {
-            return this.buffer.data["queue"];
+            this.id = id;
+            this.bufferSize = size;
+            this.buffer = SharedObject.getLocal(SHARED_OBJECT_BUFFER_NAME);
+            this.buffer.data[id] = [];
+            this.buffer.flush();
         }
 
         public function push(payload: IPayload):void
         {
-            var _q:Array = this.buffer.data["queue"];
-            if (_q == null)
+            var payloads:Array = this.buffer.data[id];
+            if (payloads == null)
             {
-              _q = [];
+                payloads = [];
             }
-            _q.push(payload);
-            this.buffer.data["queue"] = _q;
+            payloads.push(payload);
+            this.buffer.data[id] = payloads;
             this.buffer.flush();
-        }
-
-        public function length():int
-        {
-            return this.buffer.data["queue"].length;
+            if (this.size() >= this.bufferSize) {
+                this.clear();
+                dispatchEvent(new BufferEvent(BufferEvent.FULL, this.id, payloads));
+            }
+            return;
         }
 
         public function size():int
         {
-            var _data:Array = this.buffer.data["queue"];
+            var _data:Array = this.buffer.data[id];
             var _size: int = 0;
             for each (var payload:IPayload in _data) {
                 _size += payload.size();
@@ -63,7 +64,7 @@ package com.snowplowanalytics.snowplow.tracker.emitter
 
         public function clear():void
         {
-            this.buffer.data["queue"] = [];
+            this.buffer.data[id] = [];
             this.buffer.flush();
         }
     }
