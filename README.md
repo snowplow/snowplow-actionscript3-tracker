@@ -1,10 +1,12 @@
 # ActionScript 3.0 Analytics for Snowplow
 
-[ ![Build Status] [travis-image] ] [travis] [ ![Release] [release-image] ] [releases] [ ![License] [license-image] ] [license]
+[![unsupported]][tracker-classificiation]  [![Build Status][travis-image]][travis] [![Release][release-image]][releases] [![License][license-image]][license]
+
+**DEPRECATED:** This project is no longer maintained.
 
 ## Overview
 
-Add analytics to your Flash software with the **[Snowplow] [snowplow]** event tracker for **[ActionScript 3.0] [as3]**.
+Add analytics to your Flash software with the **[Snowplow][snowplow]** event tracker for **[ActionScript 3.0][as3]**.
 
 With this tracker you can collect event data from your Flash Player 9+, Flash Lite 4 and AIR games, apps and widgets.
 
@@ -12,14 +14,14 @@ With this tracker you can collect event data from your Flash Player 9+, Flash Li
 
 | Technical Docs                  | Setup Guide               | Roadmap                 | Contributing                      |
 |---------------------------------|---------------------------|-------------------------|-----------------------------------|
-| ![i1] [techdocs-image]          | ![i2] [setup-image]       | ![i3] [roadmap-image]   | ![i4] [contributing-image]        |
-| **[Technical Docs] [techdocs]** | **[Setup Guide] [setup]** | **[Roadmap] [roadmap]** | **[Contributing] [contributing]** |
+| ![i1][techdocs-image]          | ![i2][setup-image]       | ![i3][roadmap-image]   | ![i4][contributing-image]        |
+| **[Technical Docs][techdocs]** | **[Setup Guide][setup]** | **[Roadmap][roadmap]** | **[Contributing][contributing]** |
 
 ## Copyright and license
 
 The Snowplow ActionScript 3.0 Tracker is copyright 2015 Snowplow Analytics Ltd.
 
-Licensed under the **[Apache License, Version 2.0] [license]** (the "License");
+Licensed under the **[Apache License, Version 2.0][license]** (the "License");
 you may not use this software except in compliance with the License.
 
 Unless required by applicable law or agreed to in writing, software
@@ -49,3 +51,6 @@ limitations under the License.
 [setup]: https://github.com/snowplow/snowplow/wiki/ActionScript3-Tracker-Setup
 [roadmap]: https://github.com/snowplow/snowplow/wiki/Product-roadmap
 [contributing]: https://github.com/snowplow/snowplow/wiki/Contributing
+
+[tracker-classificiation]: https://github.com/snowplow/snowplow/wiki/Tracker-Maintenance-Classification
+[unsupported]: https://img.shields.io/static/v1?style=flat&label=Snowplow&message=Unsupported&color=24292e&labelColor=lightgrey&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAeFBMVEVMaXGXANeYANeXANZbAJmXANeUANSQAM+XANeMAMpaAJhZAJeZANiXANaXANaOAM2WANVnAKWXANZ9ALtmAKVaAJmXANZaAJlXAJZdAJxaAJlZAJdbAJlbAJmQAM+UANKZANhhAJ+EAL+BAL9oAKZnAKVjAKF1ALNBd8J1AAAAKHRSTlMAa1hWXyteBTQJIEwRgUh2JjJon21wcBgNfmc+JlOBQjwezWF2l5dXzkW3/wAAAHpJREFUeNokhQOCA1EAxTL85hi7dXv/E5YPCYBq5DeN4pcqV1XbtW/xTVMIMAZE0cBHEaZhBmIQwCFofeprPUHqjmD/+7peztd62dWQRkvrQayXkn01f/gWp2CrxfjY7rcZ5V7DEMDQgmEozFpZqLUYDsNwOqbnMLwPAJEwCopZxKttAAAAAElFTkSuQmCC 
